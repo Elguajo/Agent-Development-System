@@ -4,6 +4,9 @@
 
 **An AI Development Workflow System for building software with Codex and Claude Code.**
 
+</div>
+
+<div align="left">
 <p>
   <a href="#quick-start">Quick start</a><br>
   <a href="#keep-skills-up-to-date">Update skills</a><br>
