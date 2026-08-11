@@ -1,24 +1,58 @@
 <div align="center">
 
-# Agent Skills
+# Agent Development System
 
-**A version-controlled, cross-agent library of focused workflows for Codex and Claude Code.**
+**An AI Development Workflow System for building software with Codex, Claude Code, and other coding agents.**
 
-[Quick start](#quick-start) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
+[Quick start](#quick-start) · [Concept](docs/ai-development-workflow-system.md) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
 
 </div>
 
 ---
 
+## What this project is
+
+**Agent Development System** is the project name.
+
+Its architectural direction is an **AI Development Workflow System**: we are not primarily building the agents themselves; we are building the system through which AI agents develop software.
+
+That means coordinating:
+
+```text
+project intent
+    ↓
+skill discovery / routing
+    ↓
+specialist workflows
+    ↓
+tools and integrations
+    ↓
+implementation
+    ↓
+verification and review
+    ↓
+release evidence
+    ↓
+SHIP
+```
+
+Skills are therefore one layer of the system, not the whole system.
+
+The goal is to make AI-assisted software development more deliberate, reusable, inspectable, conflict-aware, and production-ready without forcing unnecessary process onto simple tasks.
+
+Read the full concept and development roadmap in [`docs/ai-development-workflow-system.md`](docs/ai-development-workflow-system.md).
+
 ## Why this repository exists
 
-Useful agent workflows should be reusable, reviewable, portable, and clearly bounded—not buried inside a chat or copied by hand between computers. This repository is the single source of truth for an intentionally curated personal skill system.
+Useful AI development workflows should be reusable, reviewable, portable, and clearly bounded—not buried inside a chat or copied by hand between computers.
 
-Each skill follows the [Agent Skills](https://agentskills.io/) format: a folder with a `SKILL.md`, plus optional scripts, references, and assets. The common format lets the same workflow work in both Codex and Claude Code.
+This repository is the single source of truth for the current workflow system: skills, routing metadata, responsibility boundaries, provenance, installation logic, and documentation.
 
-The library is deliberately **conflict-aware**. Each specialist owns one primary responsibility and hands off to another skill instead of competing with it. See [Skill Boundaries and Handoffs](docs/skill-boundaries.md).
+Each skill follows the [Agent Skills](https://agentskills.io/) format: a folder with a `SKILL.md`, plus optional scripts, references, and assets. The common format lets core workflows work in both Codex and Claude Code.
 
-For a broader explanation of skills, agents, tools, MCP, subagents, hooks, permissions, memory, plugins, and automations, see the [Agent Architecture reference](docs/agent-architecture.md).
+The system is deliberately **conflict-aware**. Each specialist owns one primary concern and hands work off instead of competing with neighboring skills. See [`docs/skill-boundaries.md`](docs/skill-boundaries.md).
+
+For a broader explanation of skills, agents, tools, MCP, subagents, hooks, permissions, memory, plugins, and automations, see [`docs/agent-architecture.md`](docs/agent-architecture.md).
 
 ## Quick start
 
@@ -43,13 +77,13 @@ Existing skills are never overwritten. To deliberately replace an existing local
 ./bootstrap.sh --adopt
 ```
 
-The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only **broken symlinks that were previously managed by this repository**, which makes repository-managed skill renames safe without touching unrelated local skills.
+The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only broken symlinks that were previously managed by this repository, so repository-managed skill renames do not touch unrelated local skills.
 
-Restart Codex or Claude Code if either was already running when a new skill was installed.
+Restart Codex or Claude Code if either was already running when new skills were installed.
 
 ## Workflow map
 
-This is the conceptual system. **It is not a requirement to run every skill for every task.** `feature-development` acts as an orchestrator and should select only the specialists justified by the change.
+This is the current software-development workflow model. **It is not a requirement to run every skill for every task.** `feature-development` acts as an orchestrator and should select only the specialists justified by the change.
 
 ```text
                                   PRODUCT
@@ -122,10 +156,12 @@ A more accurate way to read the map is:
 - **Definition:** what should exist?
 - **Understanding:** how does the current system work?
 - **Architecture:** how should the change fit?
-- **Implementation specialists:** what discipline-specific rules apply?
+- **Implementation specialists:** which discipline-specific workflows apply?
 - **Verification:** does it work and look right?
-- **Review:** is it maintainable, secure, accessible, and performant?
+- **Review:** is it maintainable, secure, accessible, and performant where relevant?
 - **Release gate:** is there enough evidence to ship?
+
+The long-term direction adds intelligent routing, tool-aware execution, evidence-aware completion, and reusable project bootstrapping. See the [AI Development Workflow System roadmap](docs/ai-development-workflow-system.md#development-direction).
 
 ## Included skills
 
@@ -183,7 +219,7 @@ All listed skills are intended for Codex and Claude Code unless a skill explicit
 
 ## How the skills avoid conflicts
 
-The key rule is **one primary owner per concern**. Examples:
+The key rule is **one primary owner per concern**.
 
 - `codebase-explorer` explains **how the repository works now**; `solution-architecture` decides **how it should change**.
 - `product-spec` owns product intent and acceptance criteria; `solution-architecture` owns technical structure.
@@ -206,17 +242,17 @@ agent-skills/skills/<skill>/SKILL.md
                  └── ~/.claude/skills/<skill>  → Claude Code
 ```
 
-The installer creates absolute symbolic links, so any update committed to this repository immediately becomes the canonical local version for both agents.
+The installer creates absolute symbolic links, so an update committed to this repository becomes the canonical local version for both agents after the repository is updated locally.
 
 ## Everyday workflow
 
-### Install or refresh local links
+Install or refresh local links:
 
 ```bash
 ./bootstrap.sh
 ```
 
-### Update the library
+Update the library:
 
 ```bash
 git pull --ff-only
@@ -232,7 +268,7 @@ After a repository-managed skill is renamed, the same command removes its stale 
 | New computer or no conflicting local skill | `./bootstrap.sh` | Adds missing links and leaves every existing unrelated local skill untouched. |
 | An existing local skill should be managed by this repository | `./bootstrap.sh --adopt` | Moves the existing folder to a timestamped backup, then replaces it with a link to this repository. |
 
-Use `--adopt` only when the repository version is the one you want both agents to use. The previous local folders remain recoverable at `~/.agent-skills-backups/`.
+Use `--adopt` only when the repository version is the one you want both agents to use. Previous local folders remain recoverable at `~/.agent-skills-backups/`.
 
 Skills can be selected naturally from the request or invoked explicitly when several skills could fit. Project instructions and explicit user requirements always outrank generic skill guidance.
 
@@ -275,19 +311,20 @@ Treat this section as the **navigation map for both humans and agents**. The fil
 
 ```text
 agent-skills/
-├── README.md                     # Entry point: setup, workflow, overview, repository map
-├── SKILLS.md                     # Human catalog + field notes for every skill
-├── bootstrap.sh                  # One-command installer entry point
+├── README.md                         # Entry point: identity, setup, workflow, repository map
+├── SKILLS.md                         # Human catalog + field notes for every skill
+├── bootstrap.sh                      # One-command installer entry point
 │
 ├── docs/
-│   ├── agent-architecture.md     # How skills, agents, tools, MCP, hooks, etc. relate
-│   └── skill-boundaries.md       # Precedence, collisions and handoff rules
+│   ├── ai-development-workflow-system.md # Concept, principles and development roadmap
+│   ├── agent-architecture.md         # How skills, agents, tools, MCP, hooks, etc. relate
+│   └── skill-boundaries.md           # Precedence, collisions and handoff rules
 │
 ├── scripts/
-│   └── install.sh                # Safe Codex/Claude symlink installation logic
+│   └── install.sh                    # Safe Codex/Claude symlink installation logic
 │
 └── skills/
-    ├── registry.yaml             # Machine-readable catalog for AI/tools/routing
+    ├── registry.yaml                 # Machine-readable catalog for AI/tools/routing
     │
     ├── product-spec/
     ├── codebase-explorer/
@@ -315,33 +352,36 @@ agent-skills/
 
 | Question | Canonical source | What it contains |
 |---|---|---|
-| **What is this repository and how do I install it?** | [`README.md`](README.md) | Setup, workflow map, operating model and navigation. |
-| **Which skill should I use and what can I reuse from it?** | [`SKILLS.md`](SKILLS.md) | Human-readable catalog, field notes, origin, useful parts, tooling, pairings and boundaries. |
-| **How should an AI discover or route to skills?** | [`skills/registry.yaml`](skills/registry.yaml) | Structured metadata: ownership, triggers, outputs, non-goals, tooling, relations and handoffs. |
+| **What is the project and where is it going?** | [`docs/ai-development-workflow-system.md`](docs/ai-development-workflow-system.md) | The AI Development Workflow System concept, principles, system layers, and roadmap. |
+| **How do I install and use it?** | [`README.md`](README.md) | Setup, current workflow map, operating model, and navigation. |
+| **Which skill should I use and what can I reuse from it?** | [`SKILLS.md`](SKILLS.md) | Human-readable catalog, field notes, origin, useful parts, tooling, pairings, and boundaries. |
+| **How should an AI discover or route to skills?** | [`skills/registry.yaml`](skills/registry.yaml) | Structured metadata: ownership, triggers, outputs, non-goals, tooling, relations, and handoffs. |
 | **How exactly should a skill perform its job?** | `skills/<skill>/SKILL.md` | Authoritative execution instructions for that skill. |
-| **Where did a vendored skill come from?** | `skills/<skill>/SOURCE.md` | Upstream repository, path, revision, retrieval date and local modifications when applicable. |
-| **What wins if two skills or sources disagree?** | [`docs/skill-boundaries.md`](docs/skill-boundaries.md) | Precedence, collision rules and responsibility handoffs. |
-| **How do skills relate to agents, tools, MCP, hooks and plugins?** | [`docs/agent-architecture.md`](docs/agent-architecture.md) | Conceptual architecture of the wider agent system. |
+| **Where did a vendored skill come from?** | `skills/<skill>/SOURCE.md` | Upstream repository, path, revision, retrieval date, and local modifications when applicable. |
+| **What wins if two skills or sources disagree?** | [`docs/skill-boundaries.md`](docs/skill-boundaries.md) | Precedence, collision rules, and responsibility handoffs. |
+| **How do skills relate to agents, tools, MCP, hooks, and plugins?** | [`docs/agent-architecture.md`](docs/agent-architecture.md) | Conceptual architecture of the wider agent ecosystem. |
 
-The intended reading path is therefore:
+The intended reading path is:
 
 ```text
 README.md / Repository layout
             │
-            ├── Human choosing a skill ───────→ SKILLS.md
-            │                                   │
-            │                                   ▼
-            │                              SKILL.md
+            ├── Understand the system ───────────→ ai-development-workflow-system.md
             │
-            ├── AI choosing a skill ──────────→ registry.yaml
-            │                                   │
-            │                                   ▼
-            │                              SKILL.md
+            ├── Human choosing a skill ──────────→ SKILLS.md
+            │                                      │
+            │                                      ▼
+            │                                 SKILL.md
             │
-            └── Conflict / provenance ─────────→ skill-boundaries.md / SOURCE.md
+            ├── AI choosing a skill ─────────────→ registry.yaml
+            │                                      │
+            │                                      ▼
+            │                                 SKILL.md
+            │
+            └── Conflict / provenance ────────────→ skill-boundaries.md / SOURCE.md
 ```
 
-`SKILL.md` is authoritative for **execution**. `SKILLS.md` and `registry.yaml` are authoritative for **discovery, provenance, relationships, and navigation**. Project instructions and the explicit user request still outrank generic skill guidance.
+`SKILL.md` is authoritative for **execution**. `SKILLS.md` and `registry.yaml` are authoritative for **discovery, provenance, relationships, and navigation**. The concept document is authoritative for the **direction of the system**. Project instructions and the explicit user request still outrank generic skill guidance.
 
 ## License
 
