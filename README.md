@@ -73,7 +73,7 @@ For a broader explanation of skills, agents, tools, MCP, subagents, hooks, permi
 
 ## Quick start
 
-Prerequisites: Git and a Bash-compatible shell. Clone the repository on a new computer, then run one command from its root:
+Run one command from its root:
 
 ```bash
 git clone https://github.com/Elguajo/Agents-DevKits.git
