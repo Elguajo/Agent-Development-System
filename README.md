@@ -43,7 +43,9 @@ Existing skills are never overwritten. To deliberately replace an existing local
 ./bootstrap.sh --adopt
 ```
 
-The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. Restart Codex or Claude Code if either was already running when a new skill was installed.
+The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only **broken symlinks that were previously managed by this repository**, which makes repository-managed skill renames safe without touching unrelated local skills.
+
+Restart Codex or Claude Code if either was already running when a new skill was installed.
 
 ## Workflow map
 
@@ -53,9 +55,9 @@ This is the conceptual system. **It is not a requirement to run every skill for 
                                   PRODUCT
                                      │
                                      ▼
-                         ┌──────────────────────┐
-                         │ product-requirements │
-                         └──────────┬───────────┘
+                             ┌──────────────┐
+                             │ product-spec │
+                             └──────┬───────┘
                                     │
                                     ▼
                            codebase-explorer
@@ -75,9 +77,9 @@ This is the conceptual system. **It is not a requirement to run every skill for 
          ┌──────────┼──────────┐                    │
          │          │          │                    │
          ▼          ▼          ▼                    │
-  frontend-design   │   figma-implementation        │
+  frontend-design   │      figma-to-code            │
                     │                               │
-         design-system-enforcer                     │
+             design-system                          │
                     │                               │
             responsive-design                       │
                     │                               │
@@ -131,7 +133,7 @@ A more accurate way to read the map is:
 
 | Skill | Use it for |
 |---|---|
-| [`product-requirements`](skills/product-requirements/SKILL.md) | Turn an idea into scope, states, constraints, and acceptance criteria without prematurely designing the implementation. |
+| [`product-spec`](skills/product-spec/SKILL.md) | Turn an idea into scope, states, constraints, and acceptance criteria without prematurely designing the implementation. |
 | [`codebase-explorer`](skills/codebase-explorer/SKILL.md) | Map relevant entry points, data flow, dependencies, conventions, and similar existing implementations. |
 | [`solution-architecture`](skills/solution-architecture/SKILL.md) | Choose how a non-trivial change should fit the current system and compare technical trade-offs. |
 | [`feature-development`](skills/feature-development/SKILL.md) | Orchestrate a multi-step feature across the appropriate specialist skills. |
@@ -141,8 +143,8 @@ A more accurate way to read the map is:
 | Skill | Use it for |
 |---|---|
 | [`frontend-design`](skills/frontend-design/SKILL.md) | Build visually distinctive, intentional interfaces rather than generic default designs. |
-| [`design-system-enforcer`](skills/design-system-enforcer/SKILL.md) | Reuse existing tokens, components, variants, and patterns instead of creating parallel UI systems. |
-| [`figma-implementation`](skills/figma-implementation/SKILL.md) | Translate supplied Figma/reference intent into production code without reinterpreting approved design. |
+| [`design-system`](skills/design-system/SKILL.md) | Reuse existing tokens, components, variants, and patterns instead of creating parallel UI systems. |
+| [`figma-to-code`](skills/figma-to-code/SKILL.md) | Translate supplied Figma/reference intent into production code without reinterpreting approved design. |
 | [`responsive-design`](skills/responsive-design/SKILL.md) | Define deliberate layout, content, typography, navigation, and interaction behavior across viewport sizes. |
 | [`motion-design`](skills/motion-design/SKILL.md) | Add purposeful transitions, micro-interactions, and scroll behavior with reduced-motion and performance constraints. |
 
@@ -184,8 +186,9 @@ All listed skills are intended for Codex and Claude Code unless a skill explicit
 The key rule is **one primary owner per concern**. Examples:
 
 - `codebase-explorer` explains **how the repository works now**; `solution-architecture` decides **how it should change**.
-- `frontend-design` owns art direction; `design-system-enforcer` owns consistency with the existing system.
-- A supplied Figma/reference overrides aesthetic reinterpretation; `figma-implementation` follows the source of truth.
+- `product-spec` owns product intent and acceptance criteria; `solution-architecture` owns technical structure.
+- `frontend-design` owns art direction; `design-system` owns consistency with the existing system.
+- A supplied Figma/reference overrides aesthetic reinterpretation; `figma-to-code` follows the source of truth.
 - `responsive-design` defines responsive behavior; `visual-qa` checks the rendered result.
 - `testing` owns unit/integration regression coverage; `playwright-testing` owns browser E2E behavior.
 - `debugging` changes behavior to correct a defect; `refactor` preserves behavior.
@@ -220,11 +223,13 @@ git pull --ff-only
 ./bootstrap.sh
 ```
 
+After a repository-managed skill is renamed, the same command removes its stale broken managed link and creates the new one.
+
 ## Use and adopt skills
 
 | Situation | Command | Result |
 |---|---|---|
-| New computer or no conflicting local skill | `./bootstrap.sh` | Adds missing links and leaves every existing local skill untouched. |
+| New computer or no conflicting local skill | `./bootstrap.sh` | Adds missing links and leaves every existing unrelated local skill untouched. |
 | An existing local skill should be managed by this repository | `./bootstrap.sh --adopt` | Moves the existing folder to a timestamped backup, then replaces it with a link to this repository. |
 
 Use `--adopt` only when the repository version is the one you want both agents to use. The previous local folders remain recoverable at `~/.agent-skills-backups/`.
@@ -258,7 +263,7 @@ Then install it locally:
 
 ## Safety and provenance
 
-- `bootstrap.sh` creates links only. It does not install packages, change global Git settings, or execute a skill's bundled scripts.
+- `bootstrap.sh` creates links and removes only stale broken symlinks previously managed by this repository. It does not install packages, change global Git settings, or execute a skill's bundled scripts.
 - Git does not run the installer automatically during `clone`; installation is a deliberate local action.
 - Review third-party instructions and scripts before adding them. Keep provider API keys, tokens, and private context out of this repository.
 - Imported skills carry their license and a `SOURCE.md` with the exact upstream revision. `frontend-design` retains its upstream provenance and license files.
@@ -274,13 +279,13 @@ agent-skills/
 ├── scripts/
 │   └── install.sh
 └── skills/
-    ├── product-requirements/
+    ├── product-spec/
     ├── codebase-explorer/
     ├── solution-architecture/
     ├── feature-development/
     ├── frontend-design/
-    ├── design-system-enforcer/
-    ├── figma-implementation/
+    ├── design-system/
+    ├── figma-to-code/
     ├── responsive-design/
     ├── motion-design/
     ├── debugging/
