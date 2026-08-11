@@ -24,7 +24,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: product intent, scope, states, constraints, and acceptance criteria
     use_when: requirements are ambiguous, broad, or incomplete
     produces: implementation-ready product specification
@@ -44,7 +44,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: factual understanding of the existing codebase
     use_when: an existing repository must be understood before changing or debugging it
     produces: entry points, data flow, dependencies, conventions, similar implementations, constraints
@@ -65,7 +65,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: technical approach and implementation boundaries for non-trivial changes
     use_when: a change crosses modules, data flows, integrations, persistence, or architectural boundaries
     produces: recommended approach, trade-offs, affected boundaries, risks, implementation and verification plan
@@ -86,7 +86,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: orchestration of non-trivial feature work across relevant specialist skills
     use_when: a feature benefits from definition, exploration, architecture, implementation, verification, and review
     produces: sequenced multi-skill workflow and verified feature status
@@ -134,7 +134,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: consistency with existing design tokens, components, variants, themes, and UI conventions
     use_when: the repository already has a design system, DESIGN.md, theme tokens, or established UI patterns
     produces: repository-consistent UI implementation
@@ -155,7 +155,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: translation of supplied Figma/reference intent into repository-native production UI
     use_when: Figma frames, nodes, screenshots, or approved references are the source of truth
     produces: structurally native, behaviorally correct, high-fidelity UI implementation
@@ -178,7 +178,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: deliberate cross-viewport layout, content, typography, navigation, density, and interaction behavior
     use_when: a UI must adapt across viewport sizes or input modes
     produces: responsive behavior plan and implementation guidance
@@ -198,7 +198,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: purposeful UI transitions, micro-interactions, scroll behavior, timing, and reduced-motion behavior
     use_when: motion materially improves interaction or visual communication
     produces: restrained motion system and implementation guidance
@@ -218,7 +218,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: evidence-based root-cause diagnosis and defect correction
     use_when: observed behavior is wrong and the root cause is unknown
     produces: reproduction, evidence, hypothesis, root cause, focused fix, regression verification
@@ -240,7 +240,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: behavior-preserving structural cleanup
     use_when: behavior is correct but implementation is unnecessarily complex, duplicated, or difficult to maintain
     produces: incremental cleanup with preserved observable behavior
@@ -264,7 +264,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: unit, integration, and regression test strategy and implementation
     use_when: meaningful behavior needs automated non-browser coverage
     produces: focused behavior-oriented tests at the cheapest reliable layer
@@ -286,7 +286,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: browser-level functional and end-to-end verification
     use_when: navigation, forms, browser state, network interactions, or end-to-end flows must be verified
     produces: reproducible browser-level evidence and E2E checks
@@ -309,7 +309,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: visual fidelity and visible regression checking
     use_when: rendered UI must match Figma, screenshots, DESIGN.md, or approved visual intent
     produces: evidence-based visible discrepancy findings and iteration targets
@@ -334,7 +334,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: accessibility-specific audit and remediation
     use_when: interactive UI needs semantic, keyboard, focus, labels, contrast, touch target, screen-reader, or reduced-motion review
     produces: accessibility findings and focused remediation
@@ -354,7 +354,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: evidence-based performance diagnosis
     use_when: performance is a stated concern or measurements indicate a bottleneck
     produces: measured findings, prioritized fixes, and residual performance risks
@@ -376,7 +376,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: correctness, regression, maintainability, error-handling, and meaningful change-quality review
     use_when: a completed change needs independent engineering review
     produces: actionable defect-oriented findings without stylistic churn
@@ -398,7 +398,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: security and trust-boundary review
     use_when: a change touches auth, authorization, secrets, untrusted input, uploads, permissions, sensitive APIs, or other security-relevant surfaces
     produces: threat-focused findings and mitigations
@@ -419,7 +419,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: final evidence-based ship/no-ship decision
     use_when: implementation and focused reviews are complete and a change may be ready to merge, deploy, or release
     produces: SHIP, SHIP WITH KNOWN RISKS, or NO-SHIP with evidence and residual risks
@@ -445,7 +445,7 @@ skills:
     status: active
     origin:
       type: local
-      repository: Elguajo/agent-skills
+      repository: Elguajo/Agents-DevKits
     owns: safe GitHub attribution workflow for adding Codex to the Contributors list
     use_when: the user explicitly requests Codex contributor attribution
     produces: one safe empty co-authored attribution commit and push under strict repository-state rules

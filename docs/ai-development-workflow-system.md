@@ -1,12 +1,12 @@
 # AI Development Workflow System
 
-This document defines the architectural direction of **Agent Development System**.
+This document defines the architectural direction of **Agents DevKits**.
 
 ## Naming
 
-- **Project name:** Agent Development System
+- **Project name:** Agents DevKits
 - **Concept / architecture:** AI Development Workflow System
-- **Repository slug:** `agent-skills`
+- **Repository slug:** `Agents-DevKits`
 
 The distinction is intentional.
 
@@ -15,7 +15,7 @@ We are **not primarily building agents themselves**. We are building a system th
 In short:
 
 ```text
-Agent Development System
+Agents DevKits
         = project / product name
 
 AI Development Workflow System
@@ -39,6 +39,10 @@ An AI Development Workflow System answers a larger set of questions:
 > What evidence is required before completion?
 
 The system therefore coordinates more than skills. Skills are one execution layer inside a broader development workflow.
+
+The optional developer-machine layer is a separate execution boundary. It
+installs tools and local Codex configuration only after an explicit command; it
+does not change the portable skill library or publish host-specific state.
 
 ## Target model
 
@@ -84,6 +88,14 @@ The system therefore coordinates more than skills. Skills are one execution laye
 The pipeline is adaptive. A small bug fix should not mechanically invoke every specialist. A complex feature may require product definition, architecture, frontend design, browser QA, accessibility, security, performance, and release verification.
 
 ## System layers
+
+### 0. Developer environment
+
+devkit/ prepares a macOS machine, provides a safe portable Codex baseline, and
+manages opt-in MCP profiles. Active machine configuration is adopted into an
+ignored host-local override before installation. This layer owns local
+package/configuration lifecycle; it does not own workflow routing or skill
+behavior.
 
 ### 1. Project intent and instructions
 
@@ -357,7 +369,7 @@ It is not intended to become:
 ## Canonical project model
 
 ```text
-                    AGENT DEVELOPMENT SYSTEM
+                         AGENTS DEVKIT
                               │
                               │ implements
                               ▼

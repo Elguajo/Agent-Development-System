@@ -1,8 +1,8 @@
 <div align="center">
 
-# Agent Development System
+# Agents DevKits
 
-**An AI Development Workflow System for building software with Codex and Claude Code.**
+**A portable AI development workflow system and opt-in macOS/Codex DevKits.**
 
 [Русская версия](README.ru.md)
 
@@ -15,6 +15,7 @@
 
 <p>
   <a href="#quick-start">Quick start</a><br>
+  <a href="#developer-machine-devkit">Developer-machine Devkit</a><br>
   <a href="#keep-skills-up-to-date">Update skills</a><br>
   <a href="docs/ai-development-workflow-system.md">Concept</a><br>
   <a href="#workflow-map">Workflow map</a><br>
@@ -62,7 +63,7 @@ Read the full concept and development roadmap in [`docs/ai-development-workflow-
 
 Useful AI development workflows should be reusable, reviewable, portable, and clearly bounded—not buried inside a chat or copied by hand between computers.
 
-This repository is the single source of truth for the current workflow system: skills, routing metadata, responsibility boundaries, provenance, installation logic, and documentation.
+This repository is the single source of truth for the current workflow system and its portable developer-machine layer: skills, routing metadata, responsibility boundaries, provenance, installation logic, safe Codex baseline, and documentation.
 
 Each skill follows the [Agent Skills](https://agentskills.io/) format: a folder with a `SKILL.md`, plus optional scripts, references, and assets. This repository currently ships installation support for Codex Desktop and Claude Code; another agent can reuse the format only when it supports compatible skill discovery.
 
@@ -75,8 +76,8 @@ For a broader explanation of skills, agents, tools, MCP, subagents, hooks, permi
 Prerequisites: Git and a Bash-compatible shell. Clone the repository on a new computer, then run one command from its root:
 
 ```bash
-git clone https://github.com/Elguajo/Agent-Development-System.git
-cd Agent-Development-System
+git clone https://github.com/Elguajo/Agents-DevKits.git
+cd Agents-DevKits
 ./bootstrap.sh
 ```
 
@@ -100,6 +101,37 @@ Existing skills are never overwritten. To deliberately replace an existing local
 The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only broken symlinks that were previously managed by this repository, so repository-managed skill renames do not touch unrelated local skills.
 
 Restart Codex or Claude Code if either was already running when new skills were installed.
+
+## Developer-machine Devkit
+
+The optional devkit/ layer prepares a macOS workstation and manages a
+host-local Codex configuration. It is separate from the skill installer: use
+only the part you need.
+
+On a new Mac:
+
+~~~bash
+./devkit.sh bootstrap --profile base --profile web --profile ai
+~~~
+
+On an existing Mac, adopt the active Codex config before installing Devkit:
+
+~~~bash
+./devkit.sh backup
+./devkit.sh install
+~~~
+
+install refuses to overwrite an existing Codex config without an ignored
+host-local override. MCP profiles are explicit opt-ins:
+
+~~~bash
+./devkit.sh mcp list
+./devkit.sh mcp enable playwright context7
+./devkit.sh mcp doctor
+~~~
+
+See [devkit/README.md](devkit/README.md) for all Devkit commands, profiles,
+privacy boundaries, and portable exports.
 
 ### Start using skills
 
@@ -249,7 +281,7 @@ Full precedence and collision rules: [`docs/skill-boundaries.md`](docs/skill-bou
 ## How it works
 
 ```text
-Agent-Development-System/skills/<skill>/SKILL.md
+Agents-DevKits/skills/<skill>/SKILL.md
                  │
                  ├── ~/.codex/skills/<skill>   → Codex
                  └── ~/.claude/skills/<skill>  → Claude Code
@@ -310,10 +342,11 @@ Then install it locally:
 Treat this section as the **navigation map for both humans and agents**. The file tree shows where information lives; the table below explains which source to use for which question.
 
 ```text
-Agent-Development-System/
+Agents-DevKits/
 ├── README.md                         # Entry point: identity, setup, workflow, repository map
 ├── SKILLS.md                         # Human catalog + field notes for every skill
 ├── bootstrap.sh                      # One-command installer entry point
+├── devkit.sh                         # Devkit command entry point
 │
 ├── docs/
 │   ├── ai-development-workflow-system.md # Concept, principles and development roadmap
@@ -322,6 +355,13 @@ Agent-Development-System/
 │
 ├── scripts/
 │   └── install.sh                    # Safe Codex/Claude symlink installation logic
+│
+├── devkit/                           # macOS/Codex environment layer
+│   ├── config/                       # portable Codex baseline and MCP profiles
+│   ├── mcp/                          # opt-in MCP manager and doctor
+│   ├── profiles/                     # Homebrew and local setup profiles
+│   ├── machines/                     # ignored host-specific overrides
+│   └── SOURCE.md                     # provenance of the public Devkit port
 │
 └── skills/
     ├── registry.yaml                 # Machine-readable catalog for AI/tools/routing
@@ -336,6 +376,7 @@ Agent-Development-System/
 |---|---|---|
 | **What is the project and where is it going?** | [`docs/ai-development-workflow-system.md`](docs/ai-development-workflow-system.md) | The AI Development Workflow System concept, principles, system layers, and roadmap. |
 | **How do I install and use it?** | [`README.md`](README.md) | Setup, installation lifecycle, current workflow map, operating model, and navigation. |
+| **How do I prepare or restore a developer machine?** | [`devkit/README.md`](devkit/README.md) | macOS profiles, safe Codex-config adoption, opt-in MCP profiles, diagnostics, and exports. |
 | **Which skill should I use and what can I reuse from it?** | [`SKILLS.md`](SKILLS.md) | Human-readable catalog, field notes, origin, useful parts, tooling, pairings, and boundaries. |
 | **How should an AI discover or route to skills?** | [`skills/registry.yaml`](skills/registry.yaml) | Structured metadata: ownership, triggers, outputs, non-goals, tooling, relations, and handoffs. |
 | **How exactly should a skill perform its job?** | `skills/<skill>/SKILL.md` | Authoritative execution instructions for that skill. |

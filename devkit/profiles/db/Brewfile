@@ -1,0 +1,4 @@
+brew "libpq"
+brew "postgresql@16"
+brew "redis"
+brew "sqlite"

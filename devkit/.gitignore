@@ -1,0 +1,5 @@
+# Host-specific configuration and generated machine state must never be public.
+machines/*/
+!machines/.gitkeep
+exports/
+snapshots/current/
