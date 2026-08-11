@@ -22,4 +22,4 @@ fi
 
 "$repo_root/scripts/install.sh" "$@"
 
-echo "Installed $skill_count skill(s). Restart Codex or Claude Code if they were already running."
+echo "Installation complete for $skill_count available skill(s). Restart Codex or Claude Code if they were already running."

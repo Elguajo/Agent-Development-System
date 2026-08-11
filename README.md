@@ -78,6 +78,10 @@ cd Agent-Development-System
 ./bootstrap.sh
 ```
 
+Keep this clone in a permanent location after installation. The installer creates absolute symbolic links to it, so moving or deleting the repository will break the installed skills.
+
+On Windows, run the commands from Git Bash. Creating symbolic links may also require enabling Developer Mode or using an elevated shell.
+
 `bootstrap.sh` validates that skills are present, then links each one into both local agents:
 
 | Agent | Local skill location |
@@ -94,6 +98,17 @@ Existing skills are never overwritten. To deliberately replace an existing local
 The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only broken symlinks that were previously managed by this repository, so repository-managed skill renames do not touch unrelated local skills.
 
 Restart Codex or Claude Code if either was already running when new skills were installed.
+
+### Start using skills
+
+After restarting the agent, describe the task normally or name a skill explicitly when you want a particular workflow. For example:
+
+```text
+Use product-spec to turn this feature idea into acceptance criteria.
+Use feature-development to implement this feature through the relevant specialists.
+```
+
+Use [`SKILLS.md`](SKILLS.md) to choose an explicit skill, or let an agent with skill routing select one from the task. Each installed `SKILL.md` contains the authoritative execution instructions.
 
 ### Verify or reverse an installation
 
@@ -240,6 +255,8 @@ Agent-Development-System/skills/<skill>/SKILL.md
 
 The installer creates absolute symbolic links, so an update committed to this repository becomes the canonical local version for both agents after the repository is updated locally.
 
+Do not move or delete the clone while you want to use its installed skills. If you need to relocate it, remove the existing skill symlinks first, then run `./bootstrap.sh` from the new location.
+
 ## Use and adopt skills
 
 | Situation | Command | Result |
@@ -250,6 +267,8 @@ The installer creates absolute symbolic links, so an update committed to this re
 Use `--adopt` only when the repository version is the one you want both agents to use. Previous local folders remain recoverable at `~/.agent-skills-backups/`.
 
 Skills can be selected naturally from the request or invoked explicitly when several skills could fit. Project instructions and explicit user requirements always outrank generic skill guidance.
+
+The installer prints an exact summary of newly linked, already linked, skipped, backed-up, and stale links removed skills. A skipped skill is left untouched; use `--adopt` only when you intend to replace it.
 
 ## Add a skill
 
