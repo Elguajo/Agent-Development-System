@@ -1,0 +1,391 @@
+# AI Development Workflow System
+
+This document defines the architectural direction of **Agent Development System**.
+
+## Naming
+
+- **Project name:** Agent Development System
+- **Concept / architecture:** AI Development Workflow System
+- **Repository slug:** `agent-skills`
+
+The distinction is intentional.
+
+We are **not primarily building agents themselves**. We are building a system through which AI agents develop software: they understand the task, choose the right workflows, use project context and tools, implement changes, verify the result, review risk, and decide whether the work is ready to ship.
+
+In short:
+
+```text
+Agent Development System
+        = project / product name
+
+AI Development Workflow System
+        = architectural concept
+        = how AI agents develop software through the system
+```
+
+## Core idea
+
+A collection of skills answers:
+
+> What reusable instructions are available?
+
+An AI Development Workflow System answers a larger set of questions:
+
+> What should happen next?
+> Which specialist workflow owns this concern?
+> Which source of truth wins?
+> Which tools are required?
+> How should work be handed off?
+> What evidence is required before completion?
+
+The system therefore coordinates more than skills. Skills are one execution layer inside a broader development workflow.
+
+## Target model
+
+```text
+                              SOFTWARE TASK
+                                   │
+                                   ▼
+                         Intent / classification
+                                   │
+                                   ▼
+                              product-spec
+                                   │
+                                   ▼
+                           codebase-explorer
+                                   │
+                                   ▼
+                        solution-architecture
+                                   │
+                                   ▼
+                         feature-development
+                            orchestration
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │                             │
+                    ▼                             ▼
+              implementation                specialists
+                                             as needed
+                    │                             │
+                    └──────────────┬──────────────┘
+                                   ▼
+                              verification
+                                   │
+                                   ▼
+                                 review
+                                   │
+                                   ▼
+                             release-check
+                                   │
+                                   ▼
+                                  SHIP
+```
+
+The pipeline is adaptive. A small bug fix should not mechanically invoke every specialist. A complex feature may require product definition, architecture, frontend design, browser QA, accessibility, security, performance, and release verification.
+
+## System layers
+
+### 1. Project intent and instructions
+
+Examples:
+
+- explicit user request
+- `AGENTS.md`
+- `CLAUDE.md`
+- project documentation
+- `DESIGN.md`
+- API contracts
+- approved Figma/screenshots
+
+These define project-specific truth and constraints.
+
+### 2. Discovery and routing
+
+The system should determine which workflows are relevant instead of relying on the human to manually name every skill.
+
+Current building blocks:
+
+- `SKILLS.md` — human discovery
+- `skills/registry.yaml` — structured discovery for AI/tools
+- `docs/skill-boundaries.md` — precedence and collision rules
+
+Future routing can use this metadata to classify tasks and select only justified specialists.
+
+### 3. Skills
+
+Skills contain reusable procedural knowledge.
+
+Examples:
+
+- `product-spec`
+- `solution-architecture`
+- `frontend-design`
+- `debugging`
+- `visual-qa`
+- `security-review`
+- `release-check`
+
+A skill owns a bounded concern; it should not grow until it becomes a universal agent prompt.
+
+### 4. Tools and integrations
+
+Skills describe how work should be performed. Tools make the work possible.
+
+Examples:
+
+- filesystem / shell / Git
+- browser / Playwright
+- Figma
+- GitHub
+- databases
+- MCP integrations
+
+The system should prefer existing capabilities over duplicating provider-specific tooling inside skills.
+
+### 5. Orchestration and handoffs
+
+`feature-development` is the current orchestration layer for non-trivial feature work.
+
+Over time, orchestration should become more explicit:
+
+```text
+TASK
+ │
+ ├── bug ───────→ codebase-explorer → debugging → testing
+ │
+ ├── UI ────────→ frontend-design / figma-to-code
+ │                → design-system → responsive-design
+ │                → visual-qa
+ │
+ ├── feature ───→ product-spec → solution-architecture
+ │                → implementation → targeted verification
+ │
+ └── release ───→ focused reviews → release-check
+```
+
+Handoffs matter because several specialists may participate without competing for ownership.
+
+### 6. Verification and evidence
+
+Completion must be evidence-based.
+
+Depending on the change, evidence may include:
+
+- typecheck
+- lint
+- unit/integration tests
+- browser/E2E tests
+- visual comparison
+- accessibility checks
+- performance measurements
+- security review
+- production build
+- migrations/configuration validation
+
+The system must distinguish checks actually performed from checks that were unavailable or merely assumed.
+
+### 7. Release gate
+
+`release-check` defines the final ship/no-ship boundary.
+
+The key principle is:
+
+```text
+code written ≠ task complete
+```
+
+Instead:
+
+```text
+implementation
+    + appropriate verification
+    + appropriate review
+    + release evidence
+    = ready to ship
+```
+
+## Precedence model
+
+When instructions conflict, use this order:
+
+```text
+1. Explicit user request
+2. Project instructions
+3. Task-specific source of truth
+4. Existing project conventions
+5. Generic skill guidance
+```
+
+A generic skill must never silently override higher-precedence project intent.
+
+## Design principles
+
+### Bounded ownership
+
+One primary owner per concern.
+
+### Adaptive workflow
+
+Do not invoke every skill for every task.
+
+### Evidence over confidence
+
+Agents should report what they actually inspected, ran, measured, or verified.
+
+### Reuse over duplication
+
+Reuse existing project patterns, design systems, tools, official plugins, and integrations before creating parallel mechanisms.
+
+### Handoffs over overlap
+
+When a concern changes, hand work to the appropriate specialist instead of expanding the current skill's responsibility.
+
+### Human-readable and machine-readable knowledge
+
+The system should remain understandable by a developer while also exposing structured metadata for AI routing and automation.
+
+### Provider portability
+
+Core workflows should remain useful across Codex and Claude Code where practical. Provider-specific capabilities can be integrations around the system rather than contaminating every portable skill.
+
+## Development direction
+
+The repository should evolve in stages.
+
+### Stage 1 — Skill library
+
+Status: implemented.
+
+- focused `SKILL.md` workflows
+- portable installation for Codex and Claude Code
+- provenance for imported skills
+
+### Stage 2 — Conflict-aware workflow system
+
+Status: implemented / evolving.
+
+- responsibility boundaries
+- precedence rules
+- handoffs
+- human catalog
+- machine-readable registry
+- release gate
+
+### Stage 3 — Intelligent routing
+
+Goal:
+
+- classify the task
+- inspect available context
+- select relevant skills automatically
+- skip irrelevant specialists
+- explain the chosen workflow when useful
+
+Conceptually:
+
+```text
+Task
+ ↓
+Classifier / router
+ ↓
+Relevant workflow graph
+ ↓
+Specialists
+```
+
+### Stage 4 — Tool-aware execution
+
+Goal:
+
+- understand which tools/integrations are available
+- map skills to capabilities
+- degrade gracefully when a tool is unavailable
+- use Figma/browser/GitHub/database tooling only when justified
+
+### Stage 5 — Evidence-aware completion
+
+Goal:
+
+- collect test/review evidence automatically
+- track what has and has not been verified
+- prevent premature "done" claims
+- feed evidence into `release-check`
+
+### Stage 6 — Reusable project bootstrap
+
+Goal:
+
+Make the system easy to apply to a new software repository through templates such as:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `DESIGN.md`
+- architecture/project-context templates
+- repository-specific skill selection
+
+### Stage 7 — Workflow learning and maintenance
+
+Goal:
+
+Use repeated failures and recurring work to improve the system deliberately:
+
+```text
+recurring problem
+      ↓
+identify missing rule / workflow
+      ↓
+update project instructions OR existing skill
+      ↓
+create a new skill only when responsibility is genuinely distinct
+      ↓
+update registry + boundaries + catalog
+```
+
+This prevents uncontrolled growth into dozens of overlapping prompts.
+
+## What this system is not
+
+It is not intended to become:
+
+- a giant universal system prompt
+- a random prompt collection
+- a separate skill for every tiny coding action
+- a replacement for project-specific instructions
+- a replacement for real tools, tests, or engineering judgment
+- a framework that forces every task through the same ceremony
+
+## Canonical project model
+
+```text
+                    AGENT DEVELOPMENT SYSTEM
+                              │
+                              │ implements
+                              ▼
+                 AI DEVELOPMENT WORKFLOW SYSTEM
+                              │
+          ┌───────────────────┼───────────────────┐
+          │                   │                   │
+          ▼                   ▼                   ▼
+     Instructions          Registry             Skills
+          │                   │                   │
+          └───────────────────┼───────────────────┘
+                              ▼
+                       Orchestration
+                              │
+                              ▼
+                       Tools / MCP
+                              │
+                              ▼
+                       Implementation
+                              │
+                              ▼
+                    Verification / Review
+                              │
+                              ▼
+                        Release gate
+                              │
+                              ▼
+                            SOFTWARE
+```
+
+The long-term goal is simple: **make AI-assisted software development more deliberate, repeatable, inspectable, and production-ready without turning every task into unnecessary process.**
