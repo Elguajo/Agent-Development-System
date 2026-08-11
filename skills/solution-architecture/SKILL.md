@@ -14,7 +14,7 @@ Own **how the feature should fit into the existing system**. Do not redefine pro
 
 ## Do not use when
 - The task is a trivial isolated fix.
-- Requirements are still ambiguous; use `product-requirements` first.
+- Requirements are still ambiguous; use `product-spec` first.
 - The task is primarily visual design; defer to `frontend-design` and design-system guidance.
 
 ## Workflow
@@ -45,4 +45,4 @@ Include:
 - Verification strategy
 
 ## Handoff
-Implementation should follow the chosen architecture. UI implementation may additionally use `frontend-design`, `design-system-enforcer`, or `figma-implementation`; verification belongs to the dedicated review/testing skills.
+Implementation should follow the chosen architecture. UI implementation may additionally use `frontend-design`, `design-system`, or `figma-to-code`; verification belongs to the dedicated review/testing skills.
