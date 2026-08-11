@@ -4,7 +4,16 @@
 
 **An AI Development Workflow System for building software with Codex and Claude Code.**
 
-[Quick start](#quick-start) · [Update skills](#keep-skills-up-to-date) · [Concept](docs/ai-development-workflow-system.md) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
+<p>
+  <a href="#quick-start">Quick start</a><br>
+  <a href="#keep-skills-up-to-date">Update skills</a><br>
+  <a href="docs/ai-development-workflow-system.md">Concept</a><br>
+  <a href="#workflow-map">Workflow map</a><br>
+  <a href="#included-skills">Included skills</a><br>
+  <a href="#repository-layout">Repository layout</a><br>
+  <a href="docs/agent-architecture.md">Architecture reference</a><br>
+  <a href="#safety-and-provenance">Safety</a>
+</p>
 
 </div>
 
