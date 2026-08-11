@@ -16,7 +16,7 @@
   <a href="#included-skills">Included skills</a><br>
   <a href="#repository-layout">Repository layout</a><br>
   <a href="docs/agent-architecture.md">Architecture reference</a><br>
-  <a href="#safety-and-provenance">Safety</a>
+  <a href="#safety-and-provenance">Safety & provenance</a>
 </p>
 
 </div>
