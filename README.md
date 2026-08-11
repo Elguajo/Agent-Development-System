@@ -4,7 +4,7 @@
 
 **An AI Development Workflow System for building software with Codex and Claude Code.**
 
-[Quick start](#quick-start) · [Concept](docs/ai-development-workflow-system.md) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
+[Quick start](#quick-start) · [Update skills](#keep-skills-up-to-date) · [Concept](docs/ai-development-workflow-system.md) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
 
 </div>
 
@@ -89,6 +89,23 @@ readlink "$HOME/.claude/skills/product-spec"
 ```
 
 To stop managing one skill, remove only its symlink with `unlink "$HOME/.codex/skills/<skill-name>"` or `unlink "$HOME/.claude/skills/<skill-name>"`. If it was replaced with `--adopt`, restore the original folder from the timestamped path under `~/.agent-skills-backups/` after first removing that skill's symlink. The installer never deletes the adopted folder.
+
+### Keep skills up to date
+
+Refresh local links after changing the repository locally:
+
+```bash
+./bootstrap.sh
+```
+
+Pull and install the latest library version:
+
+```bash
+git pull --ff-only
+./bootstrap.sh
+```
+
+After a repository-managed skill is renamed, the same command removes its stale broken managed link and creates the new one.
 
 ## Workflow map
 
@@ -206,23 +223,6 @@ Agent-Development-System/skills/<skill>/SKILL.md
 ```
 
 The installer creates absolute symbolic links, so an update committed to this repository becomes the canonical local version for both agents after the repository is updated locally.
-
-## Everyday workflow
-
-Install or refresh local links:
-
-```bash
-./bootstrap.sh
-```
-
-Update the library:
-
-```bash
-git pull --ff-only
-./bootstrap.sh
-```
-
-After a repository-managed skill is renamed, the same command removes its stale broken managed link and creates the new one.
 
 ## Use and adopt skills
 
