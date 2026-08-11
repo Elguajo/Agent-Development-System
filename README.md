@@ -6,8 +6,9 @@
 
 </div>
 
-## Contents
+
 <div align="left">
+## Contents
 <p>
   <a href="#quick-start">Quick start</a><br>
   <a href="#keep-skills-up-to-date">Update skills</a><br>
