@@ -102,6 +102,32 @@ The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The i
 
 Restart Codex or Claude Code if either was already running when new skills were installed.
 
+### Ask an AI agent to set it up
+
+After cloning the repository, paste one of these prompts into Codex or Claude
+Code.
+
+**Skills only — safe default**
+
+~~~text
+Install only the Agents DevKits skills from this repository. Run ./bootstrap.sh
+from the repository root. Do not use --adopt: preserve every existing local
+skill, then report which skills were linked or skipped.
+~~~
+
+**Full macOS/Codex machine template**
+
+~~~text
+Set up this macOS machine with the Agents DevKits template. First run
+./devkit.sh doctor, then run ./devkit.sh bootstrap --profile base --profile web
+--profile ai. Preserve the current Codex configuration through the Devkit
+adoption flow, enable no MCP profiles unless I name them, and report every
+system-level change.
+~~~
+
+The full template installs Homebrew packages and may change global Git, shell,
+and macOS preferences. Read the prompted actions before accepting them.
+
 ## Developer-machine Devkit
 
 The optional devkit/ layer prepares a macOS workstation and manages a
