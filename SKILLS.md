@@ -1,0 +1,285 @@
+# Skill Catalog & Field Notes
+
+This is the canonical human-readable registry for the skills in this repository.
+
+Use it to answer four questions quickly:
+
+1. **What does this skill own?**
+2. **When should I use it?**
+3. **Where did it come from?**
+4. **What should it hand off to instead of doing itself?**
+
+For machine-readable metadata, see [`skills/registry.yaml`](skills/registry.yaml). For precedence and collision rules, see [`docs/skill-boundaries.md`](docs/skill-boundaries.md).
+
+## Reading the catalog
+
+- **Origin: local** — maintained in this repository.
+- **Origin: vendored** — copied from an upstream project; check the skill's `SOURCE.md` and license before modifying or redistributing it.
+- **Tooling: optional** — the skill can still provide workflow guidance without the tool, but becomes stronger when that tool is available.
+- A skill owns one primary concern. If the task crosses concerns, prefer a handoff instead of expanding one skill until it overlaps everything else.
+
+## Quick registry
+
+| Skill | Owns | Origin | Best paired with |
+|---|---|---|---|
+| `product-spec` | Product intent, scope, states, acceptance criteria | local | `solution-architecture` |
+| `codebase-explorer` | Understanding existing implementation and constraints | local | `solution-architecture`, `debugging` |
+| `solution-architecture` | Technical approach and implementation boundaries | local | `codebase-explorer`, `feature-development` |
+| `feature-development` | Orchestration of non-trivial feature work | local | relevant specialists only |
+| `frontend-design` | Visual concept and art direction | vendored: Anthropic | `design-system`, `responsive-design`, `motion-design` |
+| `design-system` | Reuse of existing tokens, components and UI conventions | local | `frontend-design`, `figma-to-code` |
+| `figma-to-code` | Translating supplied Figma/reference intent into code | local | Figma tooling, `design-system`, `visual-qa` |
+| `responsive-design` | Cross-viewport layout/content/interaction behavior | local | `frontend-design`, `visual-qa` |
+| `motion-design` | Purposeful UI motion and interaction timing | local | `frontend-design`, `performance-review` |
+| `debugging` | Evidence-based root-cause diagnosis and bug fixing | local | `codebase-explorer`, `testing` |
+| `refactor` | Behavior-preserving structural cleanup | local | `testing`, `code-review` |
+| `testing` | Unit/integration/regression coverage | local | `debugging`, `release-check` |
+| `playwright-testing` | Browser functional/E2E verification | local | Playwright/browser tooling, `visual-qa` |
+| `visual-qa` | Visual fidelity and visible regression checking | local | browser/screenshots, `figma-to-code` |
+| `accessibility-review` | Accessibility audit/remediation | local | `playwright-testing`, `release-check` |
+| `performance-review` | Evidence-based performance diagnosis | local | profiling/browser tooling, `release-check` |
+| `code-review` | Correctness, regressions, maintainability review | local | `security-review`, `release-check` |
+| `security-review` | Security and trust-boundary review | local | `code-review`, `release-check` |
+| `release-check` | Final evidence-based ship/no-ship gate | local | all relevant verification skills |
+| `credit-codex-contributor` | Safe GitHub attribution workflow for Codex | local utility | none |
+
+---
+
+## Product and architecture
+
+### `product-spec`
+
+**Path:** [`skills/product-spec/SKILL.md`](skills/product-spec/SKILL.md)  
+**Origin:** local  
+**Use when:** an idea is vague, broad, missing states, edge cases, constraints, or acceptance criteria.  
+**Produces:** a concise implementation-ready definition of **what** should exist and **why**.  
+**Take from it:** scope framing, non-goals, states, edge cases, acceptance criteria.  
+**Do not take from it:** framework choices, database schema, component architecture, visual direction.  
+**Handoff:** `solution-architecture` once behavior is defined.
+
+### `codebase-explorer`
+
+**Path:** [`skills/codebase-explorer/SKILL.md`](skills/codebase-explorer/SKILL.md)  
+**Origin:** local  
+**Use when:** an existing repository must be understood before changing it.  
+**Produces:** relevant entry points, data flow, dependencies, conventions, similar implementations, and constraints.  
+**Take from it:** factual understanding of **how the system works now**.  
+**Do not take from it:** the future architecture decision.  
+**Handoff:** `solution-architecture` for design decisions; `debugging` for an observed defect.
+
+### `solution-architecture`
+
+**Path:** [`skills/solution-architecture/SKILL.md`](skills/solution-architecture/SKILL.md)  
+**Origin:** local  
+**Use when:** a non-trivial change crosses modules, data flows, integrations, persistence, or architectural boundaries.  
+**Produces:** the smallest coherent technical approach, affected boundaries, risks, implementation order, and verification strategy.  
+**Take from it:** technical decision-making and trade-offs.  
+**Do not take from it:** product scope or visual art direction.  
+**Pairs well with:** `codebase-explorer`, then `feature-development` or direct implementation.
+
+### `feature-development`
+
+**Path:** [`skills/feature-development/SKILL.md`](skills/feature-development/SKILL.md)  
+**Origin:** local  
+**Use when:** a feature needs several phases and more than one specialist skill.  
+**Produces:** an orchestrated path from definition through implementation and verification.  
+**Take from it:** sequencing and specialist selection.  
+**Important:** it is an **orchestrator**, not a super-skill. It should not mechanically invoke every skill or override specialist boundaries.
+
+---
+
+## Frontend and design
+
+### `frontend-design`
+
+**Path:** [`skills/frontend-design/SKILL.md`](skills/frontend-design/SKILL.md)  
+**Origin:** vendored from Anthropic  
+**Upstream metadata:** [`skills/frontend-design/SOURCE.md`](skills/frontend-design/SOURCE.md)  
+**License:** retained in the skill directory.  
+**Use when:** visual direction must be invented or significantly shaped.  
+**Produces:** distinctive art direction, typography, palette, layout concept, visual signature, and design critique.  
+**Take from it:** aesthetic reasoning and anti-template design guidance.  
+**Do not use it to:** reinterpret approved Figma/reference designs.  
+**Handoff:** `design-system` for implementation consistency; `responsive-design` and `motion-design` for their specific concerns.
+
+### `design-system`
+
+**Path:** [`skills/design-system/SKILL.md`](skills/design-system/SKILL.md)  
+**Origin:** local  
+**Use when:** the repository already has tokens, components, variants, themes, patterns, or `DESIGN.md`.  
+**Produces:** implementation aligned with the existing design system.  
+**Take from it:** component reuse rules, token discipline, consistency checks.  
+**Do not use it to:** invent the art direction.  
+**Conflict rule:** explicit new design intent wins over generic old defaults; do not silently force old tokens when the design system itself is intentionally changing.
+
+### `figma-to-code`
+
+**Path:** [`skills/figma-to-code/SKILL.md`](skills/figma-to-code/SKILL.md)  
+**Origin:** local  
+**Optional tooling:** Figma MCP/plugin or equivalent design-context access.  
+**Use when:** Figma, frames, nodes, screenshots, or another approved reference is the source of truth.  
+**Produces:** repository-native production UI matching the supplied design intent.  
+**Take from it:** mapping reference structure/assets/states to existing components.  
+**Do not use it to:** invent a replacement visual direction.  
+**Handoff:** `visual-qa` after implementation.
+
+### `responsive-design`
+
+**Path:** [`skills/responsive-design/SKILL.md`](skills/responsive-design/SKILL.md)  
+**Origin:** local  
+**Use when:** layout, typography, navigation, content priority, density, or interactions must adapt across viewport sizes.  
+**Produces:** deliberate responsive behavior rather than a single mobile breakpoint patch.  
+**Take from it:** breakpoint reasoning, fluid behavior, touch/overflow/content-priority rules.  
+**Handoff:** `visual-qa` for rendered verification.
+
+### `motion-design`
+
+**Path:** [`skills/motion-design/SKILL.md`](skills/motion-design/SKILL.md)  
+**Origin:** local  
+**Use when:** transitions, micro-interactions, scroll effects, or signature motion materially improve the interaction.  
+**Produces:** purposeful motion with timing, reduced-motion behavior, and performance constraints.  
+**Take from it:** interaction intent, timing, easing, hierarchy of motion.  
+**Do not use it to:** animate everything by default.  
+**Handoff:** `performance-review` if runtime cost becomes material.
+
+---
+
+## Implementation quality
+
+### `debugging`
+
+**Path:** [`skills/debugging/SKILL.md`](skills/debugging/SKILL.md)  
+**Origin:** local  
+**Use when:** observed behavior is incorrect and the root cause is unknown.  
+**Produces:** reproduction, evidence, hypothesis, root cause, focused fix, regression verification.  
+**Take from it:** disciplined diagnosis instead of random edits.  
+**Do not confuse with:** `refactor`, which must preserve behavior.
+
+### `refactor`
+
+**Path:** [`skills/refactor/SKILL.md`](skills/refactor/SKILL.md)  
+**Origin:** local  
+**Use when:** behavior is correct but internal structure is unnecessarily complex, duplicated, or difficult to maintain.  
+**Produces:** incremental behavior-preserving cleanup with verification.  
+**Take from it:** safe structural simplification.  
+**Do not use it to:** hide feature changes or bug fixes inside a "cleanup".
+
+---
+
+## Testing and QA
+
+### `testing`
+
+**Path:** [`skills/testing/SKILL.md`](skills/testing/SKILL.md)  
+**Origin:** local  
+**Use when:** meaningful behavior needs unit, integration, or regression coverage.  
+**Produces:** focused tests at the cheapest reliable layer.  
+**Take from it:** behavior-oriented test selection.  
+**Do not use it to:** duplicate the same scenario at every test layer.  
+**Handoff:** browser E2E behavior → `playwright-testing`.
+
+### `playwright-testing`
+
+**Path:** [`skills/playwright-testing/SKILL.md`](skills/playwright-testing/SKILL.md)  
+**Origin:** local  
+**Optional tooling:** Playwright/browser automation.  
+**Use when:** real browser flows, navigation, forms, browser state, network interactions, or end-to-end behavior must be verified.  
+**Produces:** browser-level evidence and reproducible E2E checks.  
+**Take from it:** functional browser verification.  
+**Do not confuse with:** `visual-qa`, which owns whether the rendered UI looks right.
+
+### `visual-qa`
+
+**Path:** [`skills/visual-qa/SKILL.md`](skills/visual-qa/SKILL.md)  
+**Origin:** local  
+**Optional tooling:** browser rendering, screenshots, reference images.  
+**Use when:** implemented UI must be compared against Figma, screenshots, `DESIGN.md`, or approved visual intent.  
+**Produces:** visible discrepancy findings and evidence-driven iteration.  
+**Take from it:** spacing, hierarchy, typography, overflow, breakpoint and visual-regression checks.  
+**Do not use it to:** invent a new design because the reviewer personally prefers one.
+
+### `accessibility-review`
+
+**Path:** [`skills/accessibility-review/SKILL.md`](skills/accessibility-review/SKILL.md)  
+**Origin:** local  
+**Use when:** interactive UI needs semantic HTML, keyboard, focus, labeling, contrast, touch target, screen-reader, or reduced-motion review.  
+**Produces:** accessibility-specific findings and remediation.  
+**Take from it:** accessibility audit discipline.  
+**Do not use it to:** broadly redesign unrelated visual choices.
+
+### `performance-review`
+
+**Path:** [`skills/performance-review/SKILL.md`](skills/performance-review/SKILL.md)  
+**Origin:** local  
+**Optional tooling:** browser profiler, framework profiler, bundle analysis, metrics.  
+**Use when:** performance is a stated concern or evidence indicates a bottleneck.  
+**Produces:** measured diagnosis and prioritized fixes.  
+**Take from it:** evidence-based performance work.  
+**Do not use it to:** propose speculative rewrites without measurements.
+
+---
+
+## Review and release
+
+### `code-review`
+
+**Path:** [`skills/code-review/SKILL.md`](skills/code-review/SKILL.md)  
+**Origin:** local  
+**Use when:** a completed change needs correctness, regression, maintainability, error handling, type, or meaningful quality review.  
+**Produces:** confidence-weighted actionable findings.  
+**Take from it:** defect-oriented review, not stylistic churn.  
+**Handoff:** security-sensitive findings → `security-review`.
+
+### `security-review`
+
+**Path:** [`skills/security-review/SKILL.md`](skills/security-review/SKILL.md)  
+**Origin:** local  
+**Use when:** a change touches authentication, authorization, secrets, untrusted input, trust boundaries, uploads, sensitive APIs, permissions, or other security-relevant surfaces.  
+**Produces:** threat-focused security findings and mitigations.  
+**Take from it:** security-specific review.  
+**Do not use it to:** fill a report with general style and maintainability opinions.
+
+### `release-check`
+
+**Path:** [`skills/release-check/SKILL.md`](skills/release-check/SKILL.md)  
+**Origin:** local  
+**Use when:** implementation and focused reviews are complete and the change may be ready to merge/deploy/release.  
+**Produces:** `SHIP`, `SHIP WITH KNOWN RISKS`, or `NO-SHIP`, backed by checks actually run or authoritatively observed.  
+**Take from it:** final evidence aggregation and release gating.  
+**Do not use it to:** redo architecture, design, implementation, or pretend unavailable checks passed.
+
+---
+
+## Utility
+
+### `credit-codex-contributor`
+
+**Path:** [`skills/credit-codex-contributor/SKILL.md`](skills/credit-codex-contributor/SKILL.md)  
+**Origin:** local utility  
+**Use when:** the user explicitly wants Codex to appear in GitHub's Contributors list through a co-authored commit.  
+**Produces:** one safe empty attribution commit and push under strict repository-state rules.  
+**Take from it:** the exact attribution workflow only.  
+**Do not generalize it to:** README credits, other contributors, history rewrites, or unrelated Git operations.
+
+---
+
+## How to add notes for a new skill
+
+When adding a new skill, add it to both this file and [`skills/registry.yaml`](skills/registry.yaml). Record at least:
+
+- name and path
+- category
+- primary responsibility
+- origin/provenance
+- use-when trigger
+- what it produces
+- important non-goals
+- optional/required tooling
+- handoffs / related skills
+- status (`active`, `experimental`, `deprecated`)
+
+If imported from upstream, also add a `SOURCE.md` next to the skill with repository, path, revision, retrieval date, local modifications, and license notes.
+
+## Maintenance rule
+
+`SKILL.md` is the authority for execution instructions. This catalog is the authority for **discovery, provenance, relationships, and human/AI navigation**. If they disagree, fix the catalog rather than silently changing the skill's runtime behavior here.
