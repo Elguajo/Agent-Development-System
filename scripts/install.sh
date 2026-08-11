@@ -20,6 +20,17 @@ for target_root in "${HOME}/.codex/skills" "${HOME}/.claude/skills"; do
   runtime="$(basename "$(dirname "$target_root")")"
   mkdir -p "$target_root"
 
+  # Remove only broken symlinks previously managed by this repository.
+  # This makes skill renames safe without touching unrelated local skills.
+  for existing_link in "$target_root"/*; do
+    [[ -L "$existing_link" ]] || continue
+    link_target="$(readlink "$existing_link")"
+    if [[ "$link_target" == "$source_root/"* && ! -e "$existing_link" ]]; then
+      rm "$existing_link"
+      echo "Removed stale managed link: $existing_link"
+    fi
+  done
+
   for source_skill in "$source_root"/*; do
     [[ -d "$source_skill" && -f "$source_skill/SKILL.md" ]] || continue
 
