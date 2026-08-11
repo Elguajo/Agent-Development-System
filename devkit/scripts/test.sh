@@ -35,6 +35,15 @@ if "$repo_dir/bootstrap.sh" --dry-run --profile does-not-exist >/tmp/agents-devk
   exit 1
 fi
 
+echo "==> Gstack command is opt-in and reports an absent installation"
+gstack_home="$(mktemp -d)"
+if HOME="$gstack_home" "$repo_dir/sync.sh" gstack status >/tmp/agents-devkits-gstack-status.log 2>&1; then
+  echo "Expected an absent Gstack installation to be reported" >&2
+  exit 1
+fi
+grep -q 'Gstack is not installed' /tmp/agents-devkits-gstack-status.log
+rmdir "$gstack_home"
+
 echo "==> install uses portable baseline in an isolated home"
 tmp_home="$(mktemp -d)"
 tmp_repo=""

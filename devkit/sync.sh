@@ -41,6 +41,10 @@ case "$command" in
     shift || true
     "$repo_dir/mcp/manage.sh" "$@"
     ;;
+  gstack)
+    shift || true
+    "$repo_dir/gstack/manage.sh" "$@"
+    ;;
   guard)
     shift || true
     "$repo_dir/scripts/secret-guard.sh" "$repo_dir" "$@"
@@ -63,6 +67,7 @@ Commands:
   export   Build a safe portable .tar.gz archive with checksum.
   mcp      List, enable, or diagnose opt-in portable MCP profiles.
   mcp-doctor Check dependencies declared by the portable Codex configuration.
+  gstack   Install, update, or inspect the opt-in pinned Gstack integration.
   guard    Run the secret guard against this repo.
   test     Run local validation checks.
 HELP
