@@ -4,7 +4,7 @@
 
 **A version-controlled, cross-agent library of focused workflows for Codex and Claude Code.**
 
-[Quick start](#quick-start) · [Skill catalog](SKILLS.md) · [AI registry](skills/registry.yaml) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Skill boundaries](docs/skill-boundaries.md) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
+[Quick start](#quick-start) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
 
 </div>
 
@@ -46,15 +46,6 @@ Existing skills are never overwritten. To deliberately replace an existing local
 The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only **broken symlinks that were previously managed by this repository**, which makes repository-managed skill renames safe without touching unrelated local skills.
 
 Restart Codex or Claude Code if either was already running when a new skill was installed.
-
-## Skill registry
-
-The short tables below are for browsing. For deeper discovery and provenance use the two canonical indexes:
-
-- [`SKILLS.md`](SKILLS.md) — human-readable catalog and field notes: what each skill owns, when to use it, what to reuse from it, source/provenance, tooling, boundaries, and handoffs.
-- [`skills/registry.yaml`](skills/registry.yaml) — machine-readable registry for Codex, Claude Code, scripts, or other agents that need structured skill metadata.
-
-`SKILL.md` remains authoritative for execution instructions. The catalog/registry are authoritative for **discovery, provenance, relationships, and navigation**.
 
 ## Workflow map
 
@@ -190,8 +181,6 @@ A more accurate way to read the map is:
 
 All listed skills are intended for Codex and Claude Code unless a skill explicitly documents an agent-specific dependency.
 
-For full notes, provenance, tooling and relationships, use [`SKILLS.md`](SKILLS.md) or [`skills/registry.yaml`](skills/registry.yaml).
-
 ## How the skills avoid conflicts
 
 The key rule is **one primary owner per concern**. Examples:
@@ -282,18 +271,24 @@ Then install it locally:
 
 ## Repository layout
 
+Treat this section as the **navigation map for both humans and agents**. The file tree shows where information lives; the table below explains which source to use for which question.
+
 ```text
 agent-skills/
-├── README.md                 # Overview, setup, workflow map, short skill list
-├── SKILLS.md                 # Human-readable catalog, provenance and field notes
-├── bootstrap.sh
+├── README.md                     # Entry point: setup, workflow, overview, repository map
+├── SKILLS.md                     # Human catalog + field notes for every skill
+├── bootstrap.sh                  # One-command installer entry point
+│
 ├── docs/
-│   ├── agent-architecture.md
-│   └── skill-boundaries.md
+│   ├── agent-architecture.md     # How skills, agents, tools, MCP, hooks, etc. relate
+│   └── skill-boundaries.md       # Precedence, collisions and handoff rules
+│
 ├── scripts/
-│   └── install.sh
+│   └── install.sh                # Safe Codex/Claude symlink installation logic
+│
 └── skills/
-    ├── registry.yaml         # Machine-readable index for AI/tools
+    ├── registry.yaml             # Machine-readable catalog for AI/tools/routing
+    │
     ├── product-spec/
     ├── codebase-explorer/
     ├── solution-architecture/
@@ -315,6 +310,38 @@ agent-skills/
     ├── release-check/
     └── credit-codex-contributor/
 ```
+
+### Knowledge map
+
+| Question | Canonical source | What it contains |
+|---|---|---|
+| **What is this repository and how do I install it?** | [`README.md`](README.md) | Setup, workflow map, operating model and navigation. |
+| **Which skill should I use and what can I reuse from it?** | [`SKILLS.md`](SKILLS.md) | Human-readable catalog, field notes, origin, useful parts, tooling, pairings and boundaries. |
+| **How should an AI discover or route to skills?** | [`skills/registry.yaml`](skills/registry.yaml) | Structured metadata: ownership, triggers, outputs, non-goals, tooling, relations and handoffs. |
+| **How exactly should a skill perform its job?** | `skills/<skill>/SKILL.md` | Authoritative execution instructions for that skill. |
+| **Where did a vendored skill come from?** | `skills/<skill>/SOURCE.md` | Upstream repository, path, revision, retrieval date and local modifications when applicable. |
+| **What wins if two skills or sources disagree?** | [`docs/skill-boundaries.md`](docs/skill-boundaries.md) | Precedence, collision rules and responsibility handoffs. |
+| **How do skills relate to agents, tools, MCP, hooks and plugins?** | [`docs/agent-architecture.md`](docs/agent-architecture.md) | Conceptual architecture of the wider agent system. |
+
+The intended reading path is therefore:
+
+```text
+README.md / Repository layout
+            │
+            ├── Human choosing a skill ───────→ SKILLS.md
+            │                                   │
+            │                                   ▼
+            │                              SKILL.md
+            │
+            ├── AI choosing a skill ──────────→ registry.yaml
+            │                                   │
+            │                                   ▼
+            │                              SKILL.md
+            │
+            └── Conflict / provenance ─────────→ skill-boundaries.md / SOURCE.md
+```
+
+`SKILL.md` is authoritative for **execution**. `SKILLS.md` and `registry.yaml` are authoritative for **discovery, provenance, relationships, and navigation**. Project instructions and the explicit user request still outrank generic skill guidance.
 
 ## License
 
