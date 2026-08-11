@@ -4,7 +4,7 @@
 
 **A version-controlled, cross-agent library of focused workflows for Codex and Claude Code.**
 
-[Quick start](#quick-start) · [Included skills](#included-skills) · [Use & adopt](#use-and-adopt-skills) · [Add a skill](#add-a-skill) · [Safety](#safety-and-provenance)
+[Quick start](#quick-start) · [Included skills](#included-skills) · [Use & adopt](#use-and-adopt-skills) · [Add a skill](#add-a-skill) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
 
 </div>
 
@@ -19,6 +19,10 @@ source of truth for a small, intentionally curated collection of personal skills
 Each skill follows the [Agent Skills](https://agentskills.io/) format: a folder
 with a `SKILL.md`, plus optional scripts, references, and assets. The common
 format lets the same workflow work in both Codex and Claude Code.
+
+For a broader explanation of skills, agents, tools, MCP, subagents, hooks,
+permissions, memory, plugins, and automations, see the
+[Agent Architecture reference](docs/agent-architecture.md).
 
 ## Quick start
 
@@ -167,6 +171,8 @@ Then install it locally:
 ```text
 agent-skills/
 ├── bootstrap.sh             # One-command setup on a new computer
+├── docs/
+│   └── agent-architecture.md # Skills and agent-system architecture reference
 ├── scripts/
 │   └── install.sh           # Safe symlink installer
 └── skills/
