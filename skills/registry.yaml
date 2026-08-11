@@ -1,0 +1,460 @@
+schema_version: 1
+updated: 2026-08-11
+purpose: >-
+  Machine-readable index for discovering skills, provenance, relationships,
+  tooling expectations, and handoffs. SKILL.md remains authoritative for
+  execution instructions.
+
+precedence:
+  - explicit_user_request
+  - project_instructions
+  - task_specific_source_of_truth
+  - existing_project_conventions
+  - generic_skill_guidance
+
+status_values:
+  - active
+  - experimental
+  - deprecated
+
+skills:
+  - name: product-spec
+    path: skills/product-spec/SKILL.md
+    category: product
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: product intent, scope, states, constraints, and acceptance criteria
+    use_when: requirements are ambiguous, broad, or incomplete
+    produces: implementation-ready product specification
+    non_goals:
+      - technical architecture
+      - framework selection
+      - visual art direction
+    tooling: []
+    handoff_to:
+      - solution-architecture
+    related:
+      - feature-development
+
+  - name: codebase-explorer
+    path: skills/codebase-explorer/SKILL.md
+    category: architecture
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: factual understanding of the existing codebase
+    use_when: an existing repository must be understood before changing or debugging it
+    produces: entry points, data flow, dependencies, conventions, similar implementations, constraints
+    non_goals:
+      - choosing future architecture
+      - implementing fixes by default
+    tooling:
+      - repository search/read access
+    handoff_to:
+      - solution-architecture
+      - debugging
+    related:
+      - feature-development
+
+  - name: solution-architecture
+    path: skills/solution-architecture/SKILL.md
+    category: architecture
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: technical approach and implementation boundaries for non-trivial changes
+    use_when: a change crosses modules, data flows, integrations, persistence, or architectural boundaries
+    produces: recommended approach, trade-offs, affected boundaries, risks, implementation and verification plan
+    non_goals:
+      - redefining product scope
+      - visual art direction
+    tooling:
+      - repository search/read access
+    handoff_to:
+      - feature-development
+    related:
+      - product-spec
+      - codebase-explorer
+
+  - name: feature-development
+    path: skills/feature-development/SKILL.md
+    category: orchestration
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: orchestration of non-trivial feature work across relevant specialist skills
+    use_when: a feature benefits from definition, exploration, architecture, implementation, verification, and review
+    produces: sequenced multi-skill workflow and verified feature status
+    non_goals:
+      - replacing specialist skills
+      - invoking every skill mechanically
+    tooling: []
+    handoff_to:
+      - release-check
+    related:
+      - product-spec
+      - codebase-explorer
+      - solution-architecture
+
+  - name: frontend-design
+    path: skills/frontend-design/SKILL.md
+    category: frontend-design
+    status: active
+    origin:
+      type: vendored
+      repository: anthropics/skills
+      path: skills/frontend-design
+      revision: f17010c9bb483898c1d9c9f42dde2b3a98889434
+      source_file: skills/frontend-design/SOURCE.md
+      license_file: skills/frontend-design/LICENSE.txt
+      local_modifications: none
+    owns: visual concept, art direction, typography, palette, layout concept, and visual signature
+    use_when: visual direction must be invented or significantly shaped
+    produces: intentional non-generic frontend design direction and implementation guidance
+    non_goals:
+      - reinterpreting an approved Figma/reference source of truth
+      - enforcing an existing component system
+    tooling: []
+    handoff_to:
+      - design-system
+      - responsive-design
+      - motion-design
+    related:
+      - figma-to-code
+      - visual-qa
+
+  - name: design-system
+    path: skills/design-system/SKILL.md
+    category: frontend-design
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: consistency with existing design tokens, components, variants, themes, and UI conventions
+    use_when: the repository already has a design system, DESIGN.md, theme tokens, or established UI patterns
+    produces: repository-consistent UI implementation
+    non_goals:
+      - inventing art direction
+      - visual regression auditing
+    tooling:
+      - repository search/read access
+    handoff_to:
+      - visual-qa
+    related:
+      - frontend-design
+      - figma-to-code
+
+  - name: figma-to-code
+    path: skills/figma-to-code/SKILL.md
+    category: frontend-design
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: translation of supplied Figma/reference intent into repository-native production UI
+    use_when: Figma frames, nodes, screenshots, or approved references are the source of truth
+    produces: structurally native, behaviorally correct, high-fidelity UI implementation
+    non_goals:
+      - inventing replacement art direction
+      - post-implementation visual audit
+    tooling:
+      - name: Figma MCP/plugin or equivalent
+        requirement: optional
+      - repository search/read access
+    handoff_to:
+      - visual-qa
+    related:
+      - design-system
+      - responsive-design
+
+  - name: responsive-design
+    path: skills/responsive-design/SKILL.md
+    category: frontend-design
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: deliberate cross-viewport layout, content, typography, navigation, density, and interaction behavior
+    use_when: a UI must adapt across viewport sizes or input modes
+    produces: responsive behavior plan and implementation guidance
+    non_goals:
+      - base visual art direction
+      - rendered visual QA
+    tooling: []
+    handoff_to:
+      - visual-qa
+    related:
+      - frontend-design
+      - figma-to-code
+
+  - name: motion-design
+    path: skills/motion-design/SKILL.md
+    category: frontend-design
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: purposeful UI transitions, micro-interactions, scroll behavior, timing, and reduced-motion behavior
+    use_when: motion materially improves interaction or visual communication
+    produces: restrained motion system and implementation guidance
+    non_goals:
+      - animating everything by default
+      - broad performance diagnosis
+    tooling: []
+    handoff_to:
+      - performance-review
+    related:
+      - frontend-design
+      - responsive-design
+
+  - name: debugging
+    path: skills/debugging/SKILL.md
+    category: implementation-quality
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: evidence-based root-cause diagnosis and defect correction
+    use_when: observed behavior is wrong and the root cause is unknown
+    produces: reproduction, evidence, hypothesis, root cause, focused fix, regression verification
+    non_goals:
+      - random edits until symptoms disappear
+      - behavior-preserving cleanup
+    tooling:
+      - repository search/read access
+      - relevant runtime/test tools when available
+    handoff_to:
+      - testing
+    related:
+      - codebase-explorer
+      - refactor
+
+  - name: refactor
+    path: skills/refactor/SKILL.md
+    category: implementation-quality
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: behavior-preserving structural cleanup
+    use_when: behavior is correct but implementation is unnecessarily complex, duplicated, or difficult to maintain
+    produces: incremental cleanup with preserved observable behavior
+    non_goals:
+      - feature changes
+      - hidden bug fixes
+      - material architecture redesign without explicit need
+    tooling:
+      - repository search/read access
+      - relevant tests
+    handoff_to:
+      - testing
+      - code-review
+    related:
+      - debugging
+      - solution-architecture
+
+  - name: testing
+    path: skills/testing/SKILL.md
+    category: testing-qa
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: unit, integration, and regression test strategy and implementation
+    use_when: meaningful behavior needs automated non-browser coverage
+    produces: focused behavior-oriented tests at the cheapest reliable layer
+    non_goals:
+      - duplicating the same scenario at every test layer
+      - browser E2E ownership
+    tooling:
+      - project test framework
+    handoff_to:
+      - playwright-testing
+      - release-check
+    related:
+      - debugging
+      - refactor
+
+  - name: playwright-testing
+    path: skills/playwright-testing/SKILL.md
+    category: testing-qa
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: browser-level functional and end-to-end verification
+    use_when: navigation, forms, browser state, network interactions, or end-to-end flows must be verified
+    produces: reproducible browser-level evidence and E2E checks
+    non_goals:
+      - visual art direction
+      - visual fidelity ownership
+    tooling:
+      - name: Playwright/browser automation
+        requirement: preferred
+    handoff_to:
+      - visual-qa
+      - accessibility-review
+    related:
+      - testing
+      - release-check
+
+  - name: visual-qa
+    path: skills/visual-qa/SKILL.md
+    category: testing-qa
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: visual fidelity and visible regression checking
+    use_when: rendered UI must match Figma, screenshots, DESIGN.md, or approved visual intent
+    produces: evidence-based visible discrepancy findings and iteration targets
+    non_goals:
+      - inventing a replacement design
+      - functional browser behavior ownership
+    tooling:
+      - name: browser rendering/screenshots
+        requirement: preferred
+      - name: approved reference image/design
+        requirement: preferred
+    handoff_to:
+      - release-check
+    related:
+      - figma-to-code
+      - responsive-design
+      - playwright-testing
+
+  - name: accessibility-review
+    path: skills/accessibility-review/SKILL.md
+    category: testing-qa
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: accessibility-specific audit and remediation
+    use_when: interactive UI needs semantic, keyboard, focus, labels, contrast, touch target, screen-reader, or reduced-motion review
+    produces: accessibility findings and focused remediation
+    non_goals:
+      - unrelated visual redesign
+    tooling:
+      - browser/accessibility tooling when available
+    handoff_to:
+      - release-check
+    related:
+      - playwright-testing
+      - visual-qa
+
+  - name: performance-review
+    path: skills/performance-review/SKILL.md
+    category: testing-qa
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: evidence-based performance diagnosis
+    use_when: performance is a stated concern or measurements indicate a bottleneck
+    produces: measured findings, prioritized fixes, and residual performance risks
+    non_goals:
+      - speculative rewrites without measurements
+      - preference-driven removal of intentional motion
+    tooling:
+      - name: profiler, browser metrics, framework profiler, or bundle analysis
+        requirement: preferred
+    handoff_to:
+      - release-check
+    related:
+      - motion-design
+      - code-review
+
+  - name: code-review
+    path: skills/code-review/SKILL.md
+    category: review-release
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: correctness, regression, maintainability, error-handling, and meaningful change-quality review
+    use_when: a completed change needs independent engineering review
+    produces: actionable defect-oriented findings without stylistic churn
+    non_goals:
+      - implementing the feature by default
+      - deep threat-focused security analysis
+    tooling:
+      - git diff/repository read access
+    handoff_to:
+      - security-review
+      - release-check
+    related:
+      - refactor
+      - testing
+
+  - name: security-review
+    path: skills/security-review/SKILL.md
+    category: review-release
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: security and trust-boundary review
+    use_when: a change touches auth, authorization, secrets, untrusted input, uploads, permissions, sensitive APIs, or other security-relevant surfaces
+    produces: threat-focused findings and mitigations
+    non_goals:
+      - general formatting or maintainability review
+    tooling:
+      - repository search/read access
+      - dependency/security tools when available
+    handoff_to:
+      - release-check
+    related:
+      - code-review
+      - solution-architecture
+
+  - name: release-check
+    path: skills/release-check/SKILL.md
+    category: review-release
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: final evidence-based ship/no-ship decision
+    use_when: implementation and focused reviews are complete and a change may be ready to merge, deploy, or release
+    produces: SHIP, SHIP WITH KNOWN RISKS, or NO-SHIP with evidence and residual risks
+    non_goals:
+      - redoing architecture
+      - redesigning UI
+      - claiming unavailable checks passed
+    tooling:
+      - project build/test/lint/typecheck tools as applicable
+    handoff_to: []
+    related:
+      - testing
+      - playwright-testing
+      - visual-qa
+      - accessibility-review
+      - performance-review
+      - code-review
+      - security-review
+
+  - name: credit-codex-contributor
+    path: skills/credit-codex-contributor/SKILL.md
+    category: utility
+    status: active
+    origin:
+      type: local
+      repository: Elguajo/agent-skills
+    owns: safe GitHub attribution workflow for adding Codex to the Contributors list
+    use_when: the user explicitly requests Codex contributor attribution
+    produces: one safe empty co-authored attribution commit and push under strict repository-state rules
+    non_goals:
+      - README-only credits
+      - attribution for other contributors
+      - history rewrites or force pushes
+    tooling:
+      - git
+      - GitHub remote push access
+    handoff_to: []
+    related: []
