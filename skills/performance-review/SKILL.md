@@ -1,0 +1,37 @@
+---
+name: performance-review
+description: Diagnose and improve web application performance using evidence from runtime behavior, bundles, network activity, rendering, images, fonts, data fetching, caching, and Core Web Vitals. Use when performance is a stated concern or before release for targeted performance review.
+---
+
+# Performance Review
+
+Own **measured performance diagnosis and remediation**. Do not perform speculative rewrites.
+
+## Use when
+- Pages are slow, heavy, janky, or regress performance metrics.
+- Bundle, rendering, network, image/font, caching, or data-fetching behavior needs review.
+- A release needs targeted performance verification.
+
+## Do not use when
+- No performance problem or requirement exists and there is no evidence to inspect.
+- The task is general code cleanup; use `code-review` or a refactor workflow.
+- The issue is primarily visual correctness; use `visual-qa`.
+
+## Workflow
+1. Establish the target scenario and baseline when tooling permits.
+2. Inspect the critical path: navigation, server response, data fetching, JS/CSS delivery, hydration/rendering, images/fonts, and third-party code.
+3. Identify measured or clearly evidenced bottlenecks before suggesting fixes.
+4. Prefer high-impact changes that preserve behavior and architecture.
+5. Check caching, request waterfalls, duplicated fetches, over-fetching, unnecessary client work, and avoidable rerenders.
+6. Inspect bundle/dependency cost when relevant.
+7. Optimize media and font loading without degrading intended quality.
+8. Re-measure after changes and compare against the baseline.
+
+## Rules
+- Do not recommend memoization, lazy loading, caching, or code splitting by reflex; justify each with evidence.
+- Do not trade correctness or accessibility for marginal speed gains.
+- Distinguish local-development artifacts from production behavior.
+- Do not claim Core Web Vitals improvements without measurements from appropriate tooling/data.
+
+## Output contract
+Report the scenario tested, evidence, bottleneck, likely impact, recommended change, and post-change measurement when available. Clearly label unverified hypotheses.
