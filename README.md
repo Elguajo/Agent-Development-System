@@ -12,8 +12,6 @@
 
 ## What this project is
 
-**Agent Development System** is the project name.
-
 Its architectural direction is an **AI Development Workflow System**: we are not primarily building the agents themselves; we are building the system through which AI agents develop software.
 
 That means coordinating:
