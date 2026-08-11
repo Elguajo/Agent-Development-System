@@ -57,8 +57,8 @@ For a broader explanation of skills, agents, tools, MCP, subagents, hooks, permi
 Clone the repository on a new computer, then run one command from its root:
 
 ```bash
-git clone https://github.com/Elguajo/agent-skills.git
-cd agent-skills
+git clone https://github.com/Elguajo/Agent-Development-System.git
+cd Agent-Development-System
 ./bootstrap.sh
 ```
 
@@ -234,7 +234,7 @@ Full precedence and collision rules: [`docs/skill-boundaries.md`](docs/skill-bou
 ## How it works
 
 ```text
-agent-skills/skills/<skill>/SKILL.md
+Agent-Development-System/skills/<skill>/SKILL.md
                  │
                  ├── ~/.codex/skills/<skill>   → Codex
                  └── ~/.claude/skills/<skill>  → Claude Code
@@ -308,7 +308,7 @@ Then install it locally:
 Treat this section as the **navigation map for both humans and agents**. The file tree shows where information lives; the table below explains which source to use for which question.
 
 ```text
-agent-skills/
+Agent-Development-System/
 ├── README.md                         # Entry point: identity, setup, workflow, repository map
 ├── SKILLS.md                         # Human catalog + field notes for every skill
 ├── bootstrap.sh                      # One-command installer entry point
