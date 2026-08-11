@@ -4,7 +4,7 @@
 
 **A version-controlled, cross-agent library of focused workflows for Codex and Claude Code.**
 
-[Quick start](#quick-start) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Skill boundaries](docs/skill-boundaries.md) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
+[Quick start](#quick-start) · [Skill catalog](SKILLS.md) · [AI registry](skills/registry.yaml) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Skill boundaries](docs/skill-boundaries.md) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
 
 </div>
 
@@ -46,6 +46,15 @@ Existing skills are never overwritten. To deliberately replace an existing local
 The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only **broken symlinks that were previously managed by this repository**, which makes repository-managed skill renames safe without touching unrelated local skills.
 
 Restart Codex or Claude Code if either was already running when a new skill was installed.
+
+## Skill registry
+
+The short tables below are for browsing. For deeper discovery and provenance use the two canonical indexes:
+
+- [`SKILLS.md`](SKILLS.md) — human-readable catalog and field notes: what each skill owns, when to use it, what to reuse from it, source/provenance, tooling, boundaries, and handoffs.
+- [`skills/registry.yaml`](skills/registry.yaml) — machine-readable registry for Codex, Claude Code, scripts, or other agents that need structured skill metadata.
+
+`SKILL.md` remains authoritative for execution instructions. The catalog/registry are authoritative for **discovery, provenance, relationships, and navigation**.
 
 ## Workflow map
 
@@ -181,6 +190,8 @@ A more accurate way to read the map is:
 
 All listed skills are intended for Codex and Claude Code unless a skill explicitly documents an agent-specific dependency.
 
+For full notes, provenance, tooling and relationships, use [`SKILLS.md`](SKILLS.md) or [`skills/registry.yaml`](skills/registry.yaml).
+
 ## How the skills avoid conflicts
 
 The key rule is **one primary owner per concern**. Examples:
@@ -254,6 +265,7 @@ Before committing a new skill, verify that:
 4. The workflow works in both agents or explicitly documents why it is agent-specific.
 5. Bundled scripts are dependency-light, reviewable, and tested.
 6. Imported skills retain their original license and provenance.
+7. The new skill is added to both [`SKILLS.md`](SKILLS.md) and [`skills/registry.yaml`](skills/registry.yaml).
 
 Then install it locally:
 
@@ -272,6 +284,8 @@ Then install it locally:
 
 ```text
 agent-skills/
+├── README.md                 # Overview, setup, workflow map, short skill list
+├── SKILLS.md                 # Human-readable catalog, provenance and field notes
 ├── bootstrap.sh
 ├── docs/
 │   ├── agent-architecture.md
@@ -279,6 +293,7 @@ agent-skills/
 ├── scripts/
 │   └── install.sh
 └── skills/
+    ├── registry.yaml         # Machine-readable index for AI/tools
     ├── product-spec/
     ├── codebase-explorer/
     ├── solution-architecture/
