@@ -4,6 +4,8 @@
 
 **An AI Development Workflow System for building software with Codex and Claude Code.**
 
+[Русская версия](README.ru.md)
+
 </div>
 
 
