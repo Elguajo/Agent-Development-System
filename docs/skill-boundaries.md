@@ -16,13 +16,13 @@ A skill must not override a higher-precedence source.
 
 | Skill | Primary responsibility | Handoff / boundary |
 |---|---|---|
-| `product-requirements` | Define what/why, scope, states, acceptance criteria | Technical design → `solution-architecture` |
+| `product-spec` | Define what/why, scope, states, acceptance criteria | Technical design → `solution-architecture` |
 | `codebase-explorer` | Explain how the relevant existing code works | Future design → `solution-architecture`; defects → `debugging` |
-| `solution-architecture` | Decide how a non-trivial change fits the existing system | Product scope → `product-requirements`; visual direction → `frontend-design` |
+| `solution-architecture` | Decide how a non-trivial change fits the existing system | Product scope → `product-spec`; visual direction → `frontend-design` |
 | `feature-development` | Orchestrate a non-trivial feature across specialist skills | Does not replace specialist ownership |
-| `frontend-design` | Visual concept/art direction | Existing-system consistency → `design-system-enforcer`; supplied Figma → `figma-implementation` |
-| `design-system-enforcer` | Reuse existing tokens/components/patterns | Does not invent art direction |
-| `figma-implementation` | Translate supplied Figma/reference intent to production code | Post-implementation fidelity → `visual-qa` |
+| `frontend-design` | Visual concept/art direction | Existing-system consistency → `design-system`; supplied Figma → `figma-to-code` |
+| `design-system` | Reuse existing tokens/components/patterns | Does not invent art direction |
+| `figma-to-code` | Translate supplied Figma/reference intent to production code | Post-implementation fidelity → `visual-qa` |
 | `responsive-design` | Deliberate layout/content adaptation across viewport sizes | Art direction → `frontend-design`; rendered verification → `visual-qa` |
 | `motion-design` | Purposeful transitions, motion, scroll behavior, micro-interactions | Base visual direction → `frontend-design`; runtime cost → `performance-review` |
 | `debugging` | Find and fix root causes of incorrect behavior | Behavior-preserving cleanup → `refactor` |
@@ -39,8 +39,8 @@ A skill must not override a higher-precedence source.
 
 ## Collision rules
 
-### `product-requirements` vs `solution-architecture`
-`product-requirements` owns what must be true for the user/product. `solution-architecture` owns how software should satisfy it. Architecture must not silently narrow or broaden product scope.
+### `product-spec` vs `solution-architecture`
+`product-spec` owns what must be true for the user/product. `solution-architecture` owns how software should satisfy it. Architecture must not silently narrow or broaden product scope.
 
 ### `codebase-explorer` vs `solution-architecture`
 `codebase-explorer` answers “how is it built now?” `solution-architecture` answers “how should we change it?” Exploration reports facts and constraints rather than prematurely choosing the future design.
@@ -48,11 +48,11 @@ A skill must not override a higher-precedence source.
 ### `feature-development` vs specialist skills
 `feature-development` is an orchestrator. It selects justified specialists and preserves their boundaries; it should not mechanically run every skill or override specialist rules.
 
-### `frontend-design` vs `design-system-enforcer`
-`frontend-design` may propose an aesthetic direction when the brief leaves room for one. `design-system-enforcer` ensures implementation reuses the existing system. If an explicit new design direction intentionally changes the system, the task/user decision wins; do not silently force old tokens back in.
+### `frontend-design` vs `design-system`
+`frontend-design` may propose an aesthetic direction when the brief leaves room for one. `design-system` ensures implementation reuses the existing system. If an explicit new design direction intentionally changes the system, the task/user decision wins; do not silently force old tokens back in.
 
-### `frontend-design` vs `figma-implementation`
-When Figma or an approved reference is supplied as the source of truth, `figma-implementation` should reproduce it instead of allowing `frontend-design` to reinterpret it. Use `frontend-design` only for unresolved visual choices.
+### `frontend-design` vs `figma-to-code`
+When Figma or an approved reference is supplied as the source of truth, `figma-to-code` should reproduce it instead of allowing `frontend-design` to reinterpret it. Use `frontend-design` only for unresolved visual choices.
 
 ### `responsive-design` vs `visual-qa`
 `responsive-design` defines how layout/content should adapt. `visual-qa` checks the rendered result. QA should report discrepancies, not invent a different responsive system.
@@ -77,4 +77,4 @@ When Figma or an approved reference is supplied as the source of truth, `figma-i
 
 ## External skills/plugins
 
-This repository intentionally avoids duplicating provider-specific capabilities when an official external skill/plugin already owns them well. In particular, the existing vendored `frontend-design` remains the sole generic art-direction skill. Provider tools such as Figma MCP/plugins can be used by `figma-implementation` rather than copied into this repository.
+This repository intentionally avoids duplicating provider-specific capabilities when an official external skill/plugin already owns them well. In particular, the existing vendored `frontend-design` remains the sole generic art-direction skill. Provider tools such as Figma MCP/plugins can be used by `figma-to-code` rather than copied into this repository.
