@@ -2,7 +2,7 @@
 
 # Agent Development System
 
-**An AI Development Workflow System for building software with Codex, Claude Code, and other coding agents.**
+**An AI Development Workflow System for building software with Codex and Claude Code.**
 
 [Quick start](#quick-start) · [Concept](docs/ai-development-workflow-system.md) · [Workflow map](#workflow-map) · [Included skills](#included-skills) · [Repository layout](#repository-layout) · [Architecture reference](docs/agent-architecture.md) · [Safety](#safety-and-provenance)
 
@@ -46,7 +46,7 @@ Useful AI development workflows should be reusable, reviewable, portable, and cl
 
 This repository is the single source of truth for the current workflow system: skills, routing metadata, responsibility boundaries, provenance, installation logic, and documentation.
 
-Each skill follows the [Agent Skills](https://agentskills.io/) format: a folder with a `SKILL.md`, plus optional scripts, references, and assets. The common format lets core workflows work in both Codex and Claude Code.
+Each skill follows the [Agent Skills](https://agentskills.io/) format: a folder with a `SKILL.md`, plus optional scripts, references, and assets. This repository currently ships installation support for Codex Desktop and Claude Code; another agent can reuse the format only when it supports compatible skill discovery.
 
 The system is deliberately **conflict-aware**. Each specialist owns one primary concern and hands work off instead of competing with neighboring skills. See [`docs/skill-boundaries.md`](docs/skill-boundaries.md).
 
@@ -54,7 +54,7 @@ For a broader explanation of skills, agents, tools, MCP, subagents, hooks, permi
 
 ## Quick start
 
-Clone the repository on a new computer, then run one command from its root:
+Prerequisites: Git and a Bash-compatible shell. Clone the repository on a new computer, then run one command from its root:
 
 ```bash
 git clone https://github.com/Elguajo/Agent-Development-System.git
@@ -78,6 +78,17 @@ Existing skills are never overwritten. To deliberately replace an existing local
 The prior copy is moved to `~/.agent-skills-backups/`; nothing is deleted. The installer also removes only broken symlinks that were previously managed by this repository, so repository-managed skill renames do not touch unrelated local skills.
 
 Restart Codex or Claude Code if either was already running when new skills were installed.
+
+### Verify or reverse an installation
+
+The installer creates links for **both** Codex Desktop and Claude Code, even if only one is currently installed. Confirm an individual link and its target with:
+
+```bash
+readlink "$HOME/.codex/skills/product-spec"
+readlink "$HOME/.claude/skills/product-spec"
+```
+
+To stop managing one skill, remove only its symlink with `unlink "$HOME/.codex/skills/<skill-name>"` or `unlink "$HOME/.claude/skills/<skill-name>"`. If it was replaced with `--adopt`, restore the original folder from the timestamped path under `~/.agent-skills-backups/` after first removing that skill's symlink. The installer never deletes the adopted folder.
 
 ## Workflow map
 
@@ -163,55 +174,9 @@ The long-term direction adds intelligent routing, tool-aware execution, evidence
 
 ## Included skills
 
-### Product, exploration, and architecture
+The skill library covers product definition, codebase exploration, architecture, feature orchestration, frontend implementation, debugging, testing, QA, reviews, release checks, and one GitHub attribution utility.
 
-| Skill | Use it for |
-|---|---|
-| [`product-spec`](skills/product-spec/SKILL.md) | Turn an idea into scope, states, constraints, and acceptance criteria without prematurely designing the implementation. |
-| [`codebase-explorer`](skills/codebase-explorer/SKILL.md) | Map relevant entry points, data flow, dependencies, conventions, and similar existing implementations. |
-| [`solution-architecture`](skills/solution-architecture/SKILL.md) | Choose how a non-trivial change should fit the current system and compare technical trade-offs. |
-| [`feature-development`](skills/feature-development/SKILL.md) | Orchestrate a multi-step feature across the appropriate specialist skills. |
-
-### Frontend and design implementation
-
-| Skill | Use it for |
-|---|---|
-| [`frontend-design`](skills/frontend-design/SKILL.md) | Build visually distinctive, intentional interfaces rather than generic default designs. |
-| [`design-system`](skills/design-system/SKILL.md) | Reuse existing tokens, components, variants, and patterns instead of creating parallel UI systems. |
-| [`figma-to-code`](skills/figma-to-code/SKILL.md) | Translate supplied Figma/reference intent into production code without reinterpreting approved design. |
-| [`responsive-design`](skills/responsive-design/SKILL.md) | Define deliberate layout, content, typography, navigation, and interaction behavior across viewport sizes. |
-| [`motion-design`](skills/motion-design/SKILL.md) | Add purposeful transitions, micro-interactions, and scroll behavior with reduced-motion and performance constraints. |
-
-### Implementation quality
-
-| Skill | Use it for |
-|---|---|
-| [`debugging`](skills/debugging/SKILL.md) | Reproduce, isolate, diagnose, and fix root causes using evidence rather than random edits. |
-| [`refactor`](skills/refactor/SKILL.md) | Improve internal code structure while preserving externally observable behavior. |
-
-### Testing and QA
-
-| Skill | Use it for |
-|---|---|
-| [`testing`](skills/testing/SKILL.md) | Add focused unit/integration/regression coverage for meaningful behavior. |
-| [`playwright-testing`](skills/playwright-testing/SKILL.md) | Verify browser-level functional and end-to-end flows. |
-| [`visual-qa`](skills/visual-qa/SKILL.md) | Compare rendered UI against approved visual intent and identify visible regressions. |
-| [`accessibility-review`](skills/accessibility-review/SKILL.md) | Audit and remediate accessibility-specific issues. |
-| [`performance-review`](skills/performance-review/SKILL.md) | Diagnose measurable performance problems and recommend evidence-based improvements. |
-
-### Review and release
-
-| Skill | Use it for |
-|---|---|
-| [`code-review`](skills/code-review/SKILL.md) | Review a change for correctness, regressions, maintainability, error handling, and meaningful quality issues. |
-| [`security-review`](skills/security-review/SKILL.md) | Review trust boundaries, auth, authorization, secrets, validation, common exploit classes, and security-sensitive behavior. |
-| [`release-check`](skills/release-check/SKILL.md) | Perform the final evidence-based ship/no-ship gate after implementation and focused reviews are complete. |
-
-### Utility
-
-| Skill | Use it for |
-|---|---|
-| [`credit-codex-contributor`](skills/credit-codex-contributor/SKILL.md) | Add Codex to GitHub's automatic Contributors list through a safe, co-authored attribution commit. |
+Use [`SKILLS.md`](SKILLS.md) to choose a skill: it is the complete human-readable catalog, including ownership, trigger conditions, provenance, and handoffs. Use [`skills/registry.yaml`](skills/registry.yaml) for the machine-readable routing metadata. Each `skills/<skill>/SKILL.md` is authoritative for execution instructions.
 
 All listed skills are intended for Codex and Claude Code unless a skill explicitly documents an agent-specific dependency.
 
@@ -324,26 +289,8 @@ Agent-Development-System/
 └── skills/
     ├── registry.yaml                 # Machine-readable catalog for AI/tools/routing
     │
-    ├── product-spec/
-    ├── codebase-explorer/
-    ├── solution-architecture/
-    ├── feature-development/
-    ├── frontend-design/
-    ├── design-system/
-    ├── figma-to-code/
-    ├── responsive-design/
-    ├── motion-design/
-    ├── debugging/
-    ├── refactor/
-    ├── testing/
-    ├── playwright-testing/
-    ├── visual-qa/
-    ├── accessibility-review/
-    ├── performance-review/
-    ├── code-review/
-    ├── security-review/
-    ├── release-check/
-    └── credit-codex-contributor/
+    └── <skill>/
+        └── SKILL.md                # Authoritative execution instructions
 ```
 
 ### Knowledge map
@@ -351,7 +298,7 @@ Agent-Development-System/
 | Question | Canonical source | What it contains |
 |---|---|---|
 | **What is the project and where is it going?** | [`docs/ai-development-workflow-system.md`](docs/ai-development-workflow-system.md) | The AI Development Workflow System concept, principles, system layers, and roadmap. |
-| **How do I install and use it?** | [`README.md`](README.md) | Setup, current workflow map, operating model, and navigation. |
+| **How do I install and use it?** | [`README.md`](README.md) | Setup, installation lifecycle, current workflow map, operating model, and navigation. |
 | **Which skill should I use and what can I reuse from it?** | [`SKILLS.md`](SKILLS.md) | Human-readable catalog, field notes, origin, useful parts, tooling, pairings, and boundaries. |
 | **How should an AI discover or route to skills?** | [`skills/registry.yaml`](skills/registry.yaml) | Structured metadata: ownership, triggers, outputs, non-goals, tooling, relations, and handoffs. |
 | **How exactly should a skill perform its job?** | `skills/<skill>/SKILL.md` | Authoritative execution instructions for that skill. |
@@ -383,4 +330,4 @@ README.md / Repository layout
 
 ## License
 
-This repository does not impose a single license on third-party skills. Each imported skill retains its own license and attribution. Add a repository-wide license before making original skills available for reuse by others.
+Original material in this repository is licensed under the [MIT License](LICENSE). Imported skills retain their own licenses and attribution; in particular, [`frontend-design`](skills/frontend-design/) is licensed under Apache-2.0. Where terms differ, the imported skill's license governs that skill.
