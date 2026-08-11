@@ -17,11 +17,11 @@ Own **workflow orchestration**, not the specialist responsibilities themselves.
 - The user only asks for design, debugging, testing, or review; use that focused skill directly.
 
 ## Workflow
-1. Clarify product intent with `product-requirements` when scope or acceptance criteria are unclear.
+1. Clarify product intent with `product-spec` when scope or acceptance criteria are unclear.
 2. Use `codebase-explorer` to understand relevant existing patterns.
 3. Use `solution-architecture` for material technical decisions.
 4. Implement the approved smallest coherent solution, following project instructions.
-5. For UI work, preserve supplied design intent and coordinate with `frontend-design`, `design-system-enforcer`, `figma-implementation`, `responsive-design`, and `motion-design` only as relevant.
+5. For UI work, preserve supplied design intent and coordinate with `frontend-design`, `design-system`, `figma-to-code`, `responsive-design`, and `motion-design` only as relevant.
 6. Verify behavior with `testing` and/or `playwright-testing`.
 7. Verify visible UI with `visual-qa` when appropriate.
 8. Run focused `accessibility-review`, `performance-review`, `code-review`, or `security-review` when the change affects those concerns.
